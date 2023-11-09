@@ -1,4 +1,10 @@
 public class Evento {
+	public Evento(String codigo, String data, double latitude, double longitude) {
+		this.codigo = codigo;
+		this.data = data;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
 
 	private String codigo;
 
@@ -8,4 +14,19 @@ public class Evento {
 
 	private double longitude;
 
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public String getData() {
+		return data;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
 }
