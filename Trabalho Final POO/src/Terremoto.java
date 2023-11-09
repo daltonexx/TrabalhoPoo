@@ -4,6 +4,7 @@ public class Terremoto extends Evento {
 
 	public Terremoto(String codigo, String data, double latitude, double longitude) {
 		super(codigo, data, latitude, longitude);
+		this.magnitude = magnitude;
 	}
 
 	public double getMagnitude() {

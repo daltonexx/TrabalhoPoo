@@ -6,6 +6,8 @@ public class Ciclone extends Evento {
 
 	public Ciclone(String codigo, String data, double latitude, double longitude) {
 		super(codigo, data, latitude, longitude);
+		this.precipitacao = precipitacao;
+		this.velocidade = velocidade;
 	}
 
 	public double getVelocidade() {
