@@ -1,4 +1,4 @@
-public class Equipe {
+public class Equipe implements Comparable<Equipe>{
 
 	private String codinome;
 
@@ -29,5 +29,17 @@ public class Equipe {
 
 	public double getLongitude() {
 		return longitude;
+	}
+
+	public String toString(){
+		String s;
+		s = getCodinome() + ";" + getQuantidade() + ";" + getLatitude() + ";" +
+				getLongitude() + "\n";
+		return s;
+	}
+
+	@Override
+	public int compareTo(Equipe outraEquipe) {
+		return this.codinome.compareToIgnoreCase(outraEquipe.codinome);
 	}
 }
