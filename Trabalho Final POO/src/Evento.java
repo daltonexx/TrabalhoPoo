@@ -1,10 +1,4 @@
 public class Evento {
-	public Evento(String codigo, String data, double latitude, double longitude) {
-		this.codigo = codigo;
-		this.data = data;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
 
 	private String codigo;
 
@@ -28,6 +22,13 @@ public class Evento {
 
 	public double getLongitude() {
 		return longitude;
+	}
+
+	public Evento(String codigo, String data, double latitude, double longitude) {
+		this.codigo = codigo;
+		this.data = data;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 
 	@Override

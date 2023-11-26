@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Equipe {
 
 	private String codinome;
@@ -7,6 +9,8 @@ public class Equipe {
 	private double latitude;
 
 	private double longitude;
+
+	private ArrayList<Equipamento> equipamentos;
 
 	public Equipe(String codinome, int quantidade, double latitude, double longitude) {
 		this.codinome = codinome;
@@ -29,5 +33,13 @@ public class Equipe {
 
 	public double getLongitude() {
 		return longitude;
+	}
+
+	public double getSomatorioEquipamento(){
+		double soma = 0;
+		for(Equipamento e: equipamentos){
+			soma += e.getCustoDia();
+		}
+		return soma;
 	}
 }
