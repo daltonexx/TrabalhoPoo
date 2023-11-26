@@ -43,12 +43,22 @@ public class ACMERescue extends JFrame implements ActionListener {
 
         JPanel painel = new JPanel();
         BoxLayout layout = new BoxLayout(painel, BoxLayout.Y_AXIS);
+        //FlowLayout flow = new FlowLayout();
+        JPanel Titulo = new JPanel();
         painel.setLayout(layout);
-        painel.add(titulo);
-        painel.add(cEvento);
+        JPanel Linha1 = new JPanel();
+
+        //Border border = BorderFactory.createLineBorder(Color.gray, 10);
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        Titulo.add(titulo);
+        painel.add(Titulo);
+
+        Linha1.add(cEvento);
+        painel.add(Linha1);
         this.add(painel);
         this.setTitle("MENU");
-        this.setSize(400,300);
+        this.setSize(800,600);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
 
     }
