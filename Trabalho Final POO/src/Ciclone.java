@@ -4,10 +4,10 @@ public class Ciclone extends Evento {
 
 	private double precipitacao;
 
-	public Ciclone(String codigo, String data, double latitude, double longitude) {
+	public Ciclone(String codigo, String data, double latitude, double longitude, double velocidade, double precipitacao) {
 		super(codigo, data, latitude, longitude);
-		this.precipitacao = precipitacao;
 		this.velocidade = velocidade;
+		this.precipitacao = precipitacao;
 	}
 
 	public double getVelocidade() {
@@ -16,5 +16,11 @@ public class Ciclone extends Evento {
 
 	public double getPrecipitacao() {
 		return precipitacao;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + ", velocidade= " + velocidade +
+				", precipitacao= " + precipitacao;
 	}
 }

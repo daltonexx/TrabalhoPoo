@@ -29,4 +29,9 @@ public class Evento {
 	public double getLongitude() {
 		return longitude;
 	}
+
+	@Override
+	public String toString() {
+		return "Evento: \n "+  "codigo= " + codigo  + ", data= " + data  + ", latitude= " + latitude + ", longitude= " + longitude ;
+	}
 }
