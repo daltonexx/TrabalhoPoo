@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Equipe {
+public class Equipe implements Comparable<Equipe> {
 
 	private String codinome;
 
@@ -18,6 +18,8 @@ public class Equipe {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}
+
+
 
 	public String getCodinome() {
 		return codinome;
@@ -41,5 +43,10 @@ public class Equipe {
 			soma += e.getCustoDia();
 		}
 		return soma;
+	}
+
+	@Override
+	public int compareTo(Equipe o) {
+		return this.codinome.compareTo(o.codinome);
 	}
 }
