@@ -3,15 +3,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Scanner;
+import java.util.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.border.Border;
+import java.util.Collections;
+import java.util.Locale;
 
 public class ACMERescue extends JFrame implements ActionListener {
     private Scanner entrada = null;                 // Atributo para entrada de dados
@@ -20,15 +20,18 @@ public class ACMERescue extends JFrame implements ActionListener {
     private JLabel titulo;
     private AppEvento appEvento;
     private AppEquipe appEquipe;
+    private AppEquipamento appEquipamento;
     private ArrayList<Evento> eventos;
     private ArrayList<Equipe> equipes;
+    private ArrayList<Equipamento> equipamentos;
     private JButton mostrarEventos;
-    //private AppEquiapamento appEquiapamento;
 
     public ACMERescue() {
         super();
 
         eventos = new ArrayList<>();
+        equipamentos = new ArrayList<>();
+        equipes = new ArrayList<>();
 
         /** leitura de arquivo
          * try {
@@ -70,6 +73,18 @@ public class ACMERescue extends JFrame implements ActionListener {
         JPanel Linha2 = new JPanel();
         Linha2.add(mostrarEventos);
         painel.add(Linha2);
+
+        cEquipamento.addActionListener(this);
+        JPanel Linha3 = new JPanel();
+        Linha3.add(cEquipamento);
+        painel.add(Linha3);
+
+        cEquipe = new JButton("Cadastrar Equipe");
+        cEquipe.addActionListener(this);
+        JPanel Linha4 = new JPanel();
+        Linha4.add(cEquipe);
+        painel.add(Linha4);
+
         this.add(painel);
         this.setTitle("MENU");
         this.setSize(800, 600);
@@ -78,8 +93,414 @@ public class ACMERescue extends JFrame implements ActionListener {
 
     }
 
+    public class AppEquipamento extends JFrame{
+        private JButton mostrarButton;
+        private JButton finalizarButton;
+        private JButton cadastrarButton;
+        private JButton limparButton;
+        private JTextArea cadastrosTextArea;
+        private JScrollPane scrollCadastros;
+        private JComboBox tipoComboBox;
+        private JTextField idTextField;
+        private JTextField nomeTextField;
+        private JTextField custoTextField;
+        private JTextField capacidadeBarcoTextField;
+        private JTextField capacidadeTanqueTextField;
+        private JTextField cargaTextField;
+        private JLabel idLabel;
+        private JLabel nomeLabel;
+        private JLabel custoLabel;
+        private JComboBox combustivelComboBox;
+        private JLabel capacidadeBarcoLabel;
+        private JLabel capacidadeTanqueLabel;
+        private JLabel combustivelLabel;
+        private JLabel cargaLabel;
+        private JLabel tipoLabel;
+        private JLabel titulo;
+        private int selecaoTipo;
+        private ArrayList<Equipamento> equipamentos;
+
+        public AppEquipamento(ArrayList<Equipamento> equipamentos){
+            super();
+            Locale.setDefault(Locale.ENGLISH);
+            this.equipamentos = equipamentos;
+
+            //COMBO BOX CONTENTS
+            String[] tipoContent = {"Barco", "Caminhao Tanque", "Escavadeira"};
+            String[] combustivelContent = {"Alcool", "Diesel", "Gasolina"};
+
+            //CRIA FONTES
+            Font fonteTitulo = new Font("Rockwell",Font.BOLD,24);
+
+            //COMPONENTES
+            titulo = new JLabel("CADASTRA EQUIPAMENTOS");
+            titulo.setFont(fonteTitulo);
+
+            tipoLabel = new JLabel("Tipo");
+            tipoComboBox = new JComboBox<>(tipoContent);
+
+            idLabel = new JLabel("Id");
+            idTextField = new JTextField(10);
+            nomeLabel = new JLabel("Nome");
+            nomeTextField = new JTextField(30);
+            custoLabel = new JLabel("Custo");
+            custoTextField = new JTextField(10);
+
+            capacidadeBarcoLabel = new JLabel("Capacidade Barco");
+            capacidadeBarcoTextField = new JTextField(10);
+            //
+            capacidadeTanqueLabel = new JLabel("Capacidade Tanque");
+            capacidadeTanqueTextField = new JTextField(15);
+            //
+            combustivelLabel = new JLabel("Combustivel");
+            combustivelComboBox = new JComboBox<>(combustivelContent);
+            cargaLabel = new JLabel("Carga");
+            cargaTextField = new JTextField(15);
+
+            cadastrosTextArea = new JTextArea(10, 30);
+            cadastrosTextArea.setEditable(false);
+            scrollCadastros = new JScrollPane(cadastrosTextArea);
+
+            mostrarButton = new JButton("Mostrar");
+            cadastrarButton = new JButton("Cadstrar");
+            limparButton = new JButton("Limpar");
+            finalizarButton = new JButton("Finalizar");
+
+            //CRIA LAYOUTS
+            BorderLayout borderLayout = new BorderLayout();
+            FlowLayout flowLayout = new FlowLayout();
+
+
+
+
+
+            //CRIA JANELA
+            this.setTitle("Cadastra Equipamentos");
+            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+            //LAYOUT DO PANEL PRINCIPAL BORDER
+            JPanel container = new JPanel();
+            container.setLayout(borderLayout);
+
+
+
+            //LAYOUT CONTAINER BOX UP(NO BORDER NORTH) - FLOW LAYOUT
+            JPanel containerBoxUp = new JPanel();
+            containerBoxUp.setLayout(flowLayout);
+
+            containerBoxUp.add(tipoLabel);
+            containerBoxUp.add(tipoComboBox);
+            containerBoxUp.add(idLabel);
+            containerBoxUp.add(idTextField);
+            containerBoxUp.add(nomeLabel);
+            containerBoxUp.add(nomeTextField);
+
+
+            //LAYOUT CONTAINER BOX DOWN(NO BORDER NORTH) - FLOW LAYOUT
+            JPanel containerBoxDown = new JPanel();
+            containerBoxDown.setLayout(flowLayout);
+
+            containerBoxDown.add(custoLabel);
+            containerBoxDown.add(custoTextField);
+            containerBoxDown.add(capacidadeBarcoLabel);
+            containerBoxDown.add(capacidadeBarcoTextField);
+            containerBoxDown.add(capacidadeTanqueLabel);
+            containerBoxDown.add(capacidadeTanqueTextField);
+            containerBoxDown.add(combustivelLabel);
+            containerBoxDown.add(combustivelComboBox);
+            containerBoxDown.add(cargaLabel);
+            containerBoxDown.add(cargaTextField);
+
+            //LAYOUT NORTE DO BORDER(BOX LAYOUT)
+            JPanel containerNorth = new JPanel();
+            containerNorth.setLayout(new BoxLayout(containerNorth, BoxLayout.Y_AXIS));
+            containerNorth.add(titulo);
+            containerNorth.add(containerBoxUp);
+            containerNorth.add(containerBoxDown);
+
+            //LAYOUT CENTER DO BORDER
+            JPanel containerCenter = new JPanel();
+            containerCenter.setLayout(new BorderLayout());
+            containerCenter.add(scrollCadastros);
+
+            //LAYOUT SOUTH DO BORDER
+            JPanel containerSouth = new JPanel();
+            containerSouth.setLayout(flowLayout);
+            containerSouth.add(mostrarButton);
+            containerSouth.add(cadastrarButton);
+            containerSouth.add(limparButton);
+            containerSouth.add(finalizarButton);
+
+            //ADICIONA NO CONTAINER PRINCIPAL
+            container.add(containerNorth, BorderLayout.NORTH);
+            container.add(containerCenter, BorderLayout.CENTER);
+            container.add(containerSouth, BorderLayout.SOUTH);
+
+            //INICIA O APP
+            mostraBarco();
+            selecaoTipo = 0;
+            this.add(container);
+            this.pack();
+            this.setVisible(true);
+
+            //INICIAR FULLSCREEN
+            this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+
+            //ACTION LISTENERS
+
+
+            tipoComboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    selecaoTipo = tipoComboBox.getSelectedIndex();
+                    if(selecaoTipo == 0){mostraBarco();}
+                    else if(selecaoTipo == 1){mostraCaminhao();}
+                    else{mostraEscavadeira();}
+                }
+            });
+
+            cadastrarButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == cadastrarButton){
+                        boolean certo = true;
+                        //ID
+                        String idString = idTextField.getText();
+                        int id = 0;
+                        try{
+                            id = Integer.parseInt(idString);
+                            if(id < 0){
+                                certo = false;
+                                cadastrosTextArea.append("ERRO: Campo ID nao pode ser negativo" + "\n");
+                            }
+                        }catch (Exception exc){
+                            certo = false;
+                            cadastrosTextArea.append("ERRO: Campo ID precisa ser numero inteiro" + "\n");
+                        }
+                        //NOME
+                        String nome = nomeTextField.getText();
+                        if(nome.isBlank()){
+                            certo = false;
+                            cadastrosTextArea.append("ERRO: Campo nome não pode ser nulo" + "\n");
+                        }
+                        //CUSTO DIA
+                        String custoString = custoTextField.getText();
+                        double custoDia = 0;
+                        try{
+                            custoDia = Double.parseDouble(custoString);
+                            if(custoDia < 0){
+                                certo = false;
+                                cadastrosTextArea.append("ERRO: Campo custo nao pode ser negativo" + "\n");
+                            }
+                        }catch (Exception exc){
+                            certo = false;
+                            cadastrosTextArea.append("ERRO: Campo custo precisa ser numero real (Modelo Americano)" + "\n");
+                        }
+                        if(selecaoTipo == 0){
+                            int capacidadeBarco = 0;
+                            String capBarcoString = capacidadeBarcoTextField.getText();
+                            try{
+                                capacidadeBarco = Integer.parseInt(capBarcoString);
+                                if(capacidadeBarco < 0){
+                                    certo = false;
+                                    cadastrosTextArea.append("ERRO: Campo capacidade nao pode ser negativo" + "\n");
+                                }
+                            }catch (Exception exc){
+                                certo = false;
+                                cadastrosTextArea.append("ERRO: Campo capacidade precisa ser numero inteiro" + "\n");
+                            }
+                            if(certo){
+                                if(procuraID(id)){
+                                    codigoDuplicado();
+                                }
+                                else{
+                                    Barco barco = new Barco(id,nome,custoDia,capacidadeBarco);
+                                    equipamentos.add(barco);
+                                    cadastrosTextArea.append("Equipamento cadastrado: " + barco + "\n");
+                                }
+                            }
+                        }
+                        else if(selecaoTipo == 1){
+                            double capacidadeTanque = 0;
+                            String capTanqueString = capacidadeTanqueTextField.getText();
+                            try{
+                                capacidadeTanque = Double.parseDouble(capTanqueString);
+                                if(capacidadeTanque < 0){
+                                    certo = false;
+                                    cadastrosTextArea.append("ERRO: Campo capacidade nao pode ser negativo" + "\n");
+                                }
+                            }catch (Exception exc){
+                                certo = false;
+                                cadastrosTextArea.append("ERRO: Campo capacidade precisa ser numero real (Modelo Americano)" + "\n");
+                            }
+                            if(certo){
+                                if(procuraID(id)){
+                                    codigoDuplicado();
+                                }
+                                else{
+                                    CaminhaoTanque caminhaoTanque = new CaminhaoTanque(id,nome,custoDia,capacidadeTanque);
+                                    equipamentos.add(caminhaoTanque);
+                                    cadastrosTextArea.append("Equipamento cadastrado: " + caminhaoTanque + "\n");
+                                }
+                            }
+                        }
+                        else if(selecaoTipo == 2){
+                            Combustivel combustivel = null;
+                            try{
+                                combustivel = Combustivel.getEnum(combustivelComboBox.getSelectedIndex());
+                            }
+                            catch (Exception exc){
+                                combustivel = Combustivel.ALCOOL;
+                            }
+
+
+                            double carga = 0.0;
+                            String cargaString = cargaTextField.getText();
+                            try{
+                                carga = Double.parseDouble(cargaString);
+                                if(carga < 0){
+                                    certo = false;
+                                    cadastrosTextArea.append("ERRO: Campo carga nao pode ser negativo" + "\n");
+                                }
+                            }catch (Exception exc){
+                                certo = false;
+                                cadastrosTextArea.append("ERRO: Campo carga precisa ser numero real (Modelo Americano)" + "\n");
+                            }
+                            if(certo){
+                                if(procuraID(id)){
+                                    codigoDuplicado();
+                                }
+                                else{
+                                    Escavadeira escavadeira = new Escavadeira(id,nome,custoDia,combustivel,carga);
+                                    equipamentos.add(escavadeira);
+                                    cadastrosTextArea.append("Equipamento cadastrado: " + escavadeira + "\n");
+                                }
+                            }
+                        }
+                        sortByID();
+                    }
+                }
+            });
+            mostrarButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == mostrarButton){
+                        mostraCadastros();
+                    }
+                }
+            });
+
+            limparButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == limparButton){
+                        limpaCadastros();
+                    }
+                }
+            });
+
+            finalizarButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == finalizarButton){
+                        fechaAplicativo();
+                    }
+                }
+            });
+
+        }
+
+        private void mostraBarco(){
+            capacidadeTanqueLabel.setVisible(false);
+            capacidadeTanqueTextField.setVisible(false);
+            combustivelLabel.setVisible(false);
+            combustivelComboBox.setVisible(false);
+            cargaLabel.setVisible(false);
+            cargaTextField.setVisible(false);
+
+            capacidadeBarcoLabel.setVisible(true);
+            capacidadeBarcoTextField.setVisible(true);
+        }
+
+        private void mostraCaminhao(){
+            capacidadeBarcoLabel.setVisible(false);
+            capacidadeBarcoTextField.setVisible(false);
+            combustivelLabel.setVisible(false);
+            combustivelComboBox.setVisible(false);
+            cargaLabel.setVisible(false);
+            cargaTextField.setVisible(false);
+
+            capacidadeTanqueLabel.setVisible(true);
+            capacidadeTanqueTextField.setVisible(true);
+        }
+
+        private void mostraEscavadeira(){
+            capacidadeBarcoLabel.setVisible(false);
+            capacidadeBarcoTextField.setVisible(false);
+            capacidadeTanqueLabel.setVisible(false);
+            capacidadeTanqueTextField.setVisible(false);
+
+            combustivelLabel.setVisible(true);
+            combustivelComboBox.setVisible(true);
+            cargaLabel.setVisible(true);
+            cargaTextField.setVisible(true);
+        }
+
+        private boolean procuraID(int id){
+            for(Equipamento equip: equipamentos){
+                if(equip.getId() == id){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void codigoDuplicado(){
+            cadastrosTextArea.append("ERRO: ID já cadastrado" + "\n");
+        }
+
+
+        private void mostraCadastros(){
+            if(equipamentos.isEmpty()){
+                cadastrosTextArea.append("ERRO: Nenhum equipamento cadastrado\n");
+                return;
+            }
+            for(Equipamento equip : equipamentos){
+                cadastrosTextArea.append(equip.toString() + "\n");
+            }
+        }
+
+        private void limpaCadastros(){
+            cadastrosTextArea.setText("");
+            capacidadeTanqueTextField.setText("");
+            capacidadeBarcoTextField.setText("");
+            custoTextField.setText("");
+            idTextField.setText("");
+            cargaTextField.setText("");
+            nomeTextField.setText("");
+            combustivelComboBox.setSelectedIndex(0);
+        }
+
+        private void fechaAplicativo(){
+            dispose();
+        }
+
+        private void sortByID(){
+            Collections.sort(equipamentos);
+        }
+
+    }
+
+
     private void iniciarAppEvento() {
         appEvento = new AppEvento(eventos);
+    }
+    private void iniciarAppEquipamento(){
+        appEquipamento = new AppEquipamento(equipamentos);
+    }
+    private void iniciarAppEquipe(){
+        appEquipe = new AppEquipe(equipes);
     }
 
 
@@ -93,24 +514,181 @@ public class ACMERescue extends JFrame implements ActionListener {
         });
     }
 
-    /**
-     * public boolean cadastraEventos(Evento e) {
-     * for (Evento l : eventos) {
-     * if (l.getCodigo().equals(e.getCodigo()))
-     * return false;
-     * }
-     * int i = 0;
-     * while (i < eventos.size() && e.getCodigo().compareTo(eventos.get(i).getCodigo()) > 0) {
-     * i++;
-     * }
-     * <p>
-     * eventos.add(i, e);
-     * return true;
-     * }
-     * ado ado ado quem ler é viado
-     */
 
-    public class AppEvento extends JFrame implements ActionListener {
+    private class AppEquipe extends JFrame implements ActionListener {
+        private JTextField codinome, quantidade, latitude, longitude;
+        private JButton botao, fechar, limpar, crescente;
+        private JTextArea area;
+        private ArrayList<Equipe> equipes;
+
+        public AppEquipe(ArrayList<Equipe> equipes) {
+            super();
+            this.equipes = equipes;
+            equipes = new ArrayList<>();
+            codinome = new JTextField(20);
+            quantidade = new JTextField(20);
+            latitude = new JTextField(20);
+            longitude = new JTextField(20);
+            botao = new JButton("OK");
+            fechar = new JButton("Fechar");
+            limpar = new JButton("Limpar");
+            crescente = new JButton("Ordenar Crescente");
+            Color color = new Color(211,211,211);
+            Border border = BorderFactory.createLineBorder(color, 12);
+            area = new JTextArea(5,10);
+            area.setBorder(border);
+
+            area.setEditable(false);
+
+            JPanel container = new JPanel();
+            container.setBackground(color);
+            BoxLayout layout = new BoxLayout(container, BoxLayout.Y_AXIS);
+            container.setLayout(layout);
+
+            JPanel titlePanel = new JPanel();
+            titlePanel.setBackground(color);
+            JLabel title = new JLabel("Cadastro de Equipe");
+            title.setFont(new Font("Impact", Font.BOLD, 32));
+            titlePanel.add(title);
+            container.add(titlePanel);
+
+            FlowLayout flowLayout = new FlowLayout();
+
+            JPanel painelCodinome = new JPanel();
+            painelCodinome.setLayout(flowLayout);
+            painelCodinome.setBackground(color);
+            container.add(painelCodinome);
+            JPanel painelQuantidade = new JPanel();
+            painelQuantidade.setLayout(flowLayout);
+            painelQuantidade.setBackground(color);
+            container.add(painelQuantidade);
+            JPanel painelLatitude = new JPanel();
+            painelLatitude.setLayout(flowLayout);
+            painelLatitude.setBackground(color);
+            container.add(painelLatitude);
+            JPanel painelLongitude = new JPanel();
+            painelLongitude.setLayout(flowLayout);
+            painelLongitude.setBackground(color);
+            container.add(painelLongitude);
+
+            painelCodinome.add(new JLabel("Codinome: "));
+            painelCodinome.add(codinome);
+            painelQuantidade.add(new JLabel("Quantidade: "));
+            painelQuantidade.add(quantidade);
+            painelLatitude.add(new JLabel("Latitude: "));
+            painelLatitude.add(latitude);
+            painelLongitude.add(new JLabel("Longitude: "));
+            painelLongitude.add(longitude);
+            GridLayout gridLayout = new GridLayout(1,4);
+            JPanel painelButtons = new JPanel(gridLayout);
+
+            JPanel painelRetorno = new JPanel();
+            painelRetorno.setBackground(color);
+            container.add(painelRetorno);
+
+            container.add(area);
+
+            painelButtons.add(botao);
+            painelButtons.add(limpar);
+            painelButtons.add(crescente);
+            painelButtons.add(fechar);
+            container.add(painelButtons);
+
+            container.add(painelRetorno);
+
+            botao.addActionListener(this);
+            limpar.addActionListener(this);
+            crescente.addActionListener(this);
+            fechar.addActionListener(this);
+
+            this.add(container);
+            this.setSize(600, 200);
+            this.setTitle("Cadastro de equipe");
+            this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            this.pack();
+            this.setLocationRelativeTo(null);
+            this.setVisible(true);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(e.getSource() == botao) {
+                try {
+                    Equipe equipe = new Equipe(codinome.getText(), Integer.parseInt(quantidade.getText()),
+                            Double.parseDouble(latitude.getText()), Double.parseDouble(longitude.getText()));
+                    if (cadastraEquipe(equipe)) {
+                        area.setText("Cadastrado com sucesso!");
+                    } else {
+                        area.setText("Erro! Codinome já existente.");
+                    }
+                    codinome.setText("");
+                    quantidade.setText("");
+                    latitude.setText("");
+                    longitude.setText("");
+                    area.append("\n\nDados da equipe cadastrada: " + equipe.getCodinome() + ";"
+                            + equipe.getQuantidade() + ";" + equipe.getLatitude() + ";" +
+                            equipe.getLongitude());
+                }
+                catch (NumberFormatException exception){
+                    area.setText("Erro! Certifique-se de inserir números válidos para quantidade, latitude e longitude.");
+                }
+                catch (Exception exception){
+                    area.setText(exception.getMessage());
+                }
+            }
+            else if (e.getSource() == limpar){
+                codinome.setText("");
+                quantidade.setText("");
+                latitude.setText("");
+                longitude.setText("");
+                area.setText("");
+            }
+            else if(e.getSource() == crescente){
+                if (equipes.isEmpty()){
+                    area.setText("Nenhuma equipe cadastrada.");
+                    return;
+                }
+
+                Collections.sort(equipes);
+
+                area.setText("Dados das equipes:\n\n");
+                for (Equipe eq : equipes) {
+                    area.append(eq.toString());
+                }
+            }
+            else if(e.getSource() == fechar) {
+                System.exit(0);
+            }
+        }
+
+        private boolean cadastraEquipe(Equipe equipe){
+            if (equipe.getCodinome().isEmpty()){
+                throw new NullPointerException("Erro! Campo de texto vazio.");
+            }
+            if (equipes.isEmpty()){
+                equipes.add(equipe);
+                return true;
+            }
+            if (pesquisaEquipe(equipe.getCodinome()) == null){
+                equipes.add(equipe);
+                return true;
+            }
+            return false;
+        }
+
+        private Equipe pesquisaEquipe(String codinome){
+            for(Equipe e: equipes){
+                if (e.getCodinome().equalsIgnoreCase(codinome)){
+                    return e;
+                }
+            }
+            return null;
+        }
+    }
+
+
+
+    private class AppEvento extends JFrame implements ActionListener {
 
         private JTextField code, dia, mes, longitude, latitude, velocidade, precipitacao, magnitude, estiagem;
         private JButton terremoto, ciclone, seca, limpar, confirmar, mostrar, finalizar;
@@ -643,7 +1221,14 @@ public class ACMERescue extends JFrame implements ActionListener {
         if (e.getSource() == cEvento) {
             iniciarAppEvento();
 
-        } else if (e.getSource() == mostrarEventos) {
+        }else if (e.getSource()==cEquipamento){
+            iniciarAppEquipamento();
+
+        } else if (e.getSource()==cEquipe){
+            iniciarAppEquipe();
+
+
+        }else if (e.getSource() == mostrarEventos) {
             mostrarEventosCadastrados();
         }
     }
