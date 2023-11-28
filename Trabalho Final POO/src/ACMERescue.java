@@ -48,7 +48,14 @@ public class ACMERescue extends JFrame implements ActionListener {
          */
 
         titulo = new JLabel("Menu de atendimento ACMERescue");
-        cEvento = new JButton("Cadastrar Evento");
+
+
+        JFrame janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
+        janelaAtendimento.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Fecha apenas a janela atual
+        janelaAtendimento.setSize(400, 300);
+
+        JPanel painelAtendimento = new JPanel();
+        painelAtendimento.setLayout(new FlowLayout());
 
 
         JPanel painel = new JPanel();
@@ -56,34 +63,68 @@ public class ACMERescue extends JFrame implements ActionListener {
         //FlowLayout flow = new FlowLayout();
         JPanel Titulo = new JPanel();
         painel.setLayout(layout);
-        JPanel Linha1 = new JPanel();
+
 
         //Border border = BorderFactory.createLineBorder(Color.gray, 10);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         Titulo.add(titulo);
         painel.add(Titulo);
 
+        cEvento = new JButton("Cadastrar Evento");
         cEvento.addActionListener(this);
-
+        cEvento.setPreferredSize(new Dimension(200,50));
+        JPanel Linha1 = new JPanel();
         Linha1.add(cEvento);
         painel.add(Linha1);
+
         mostrarEventos = new JButton("Mostrar Eventos Cadastrados");
         mostrarEventos.addActionListener(this);
-
+        mostrarEventos.setPreferredSize(new Dimension(200, 50));
         JPanel Linha2 = new JPanel();
         Linha2.add(mostrarEventos);
         painel.add(Linha2);
 
+        cEquipamento = new JButton("Cadastrar Equipamento");
         cEquipamento.addActionListener(this);
+        cEquipamento.setPreferredSize(new Dimension(200, 50));
         JPanel Linha3 = new JPanel();
         Linha3.add(cEquipamento);
         painel.add(Linha3);
 
         cEquipe = new JButton("Cadastrar Equipe");
         cEquipe.addActionListener(this);
+        cEquipe.setPreferredSize(new Dimension(200, 50));
         JPanel Linha4 = new JPanel();
         Linha4.add(cEquipe);
         painel.add(Linha4);
+
+        cAtendimento = new JButton("Cadastrar Atendimento");
+        cAtendimento.addActionListener(this);
+        cAtendimento.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha5 = new JPanel();
+        Linha5.add(cAtendimento);
+        painel.add(Linha5);
+
+        mRelatorio = new JButton("Mostrar Relatório");
+        mRelatorio.addActionListener(this);
+        mRelatorio.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha6 = new JPanel();
+        Linha6.add(mRelatorio);
+        painel.add(Linha6);
+
+        vEquipamento = new JButton("Vincular Equipamento");
+        vEquipamento.addActionListener(this);
+        vEquipamento.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha7 = new JPanel();
+        Linha7.add(vEquipamento);
+        painel.add(Linha7);
+
+        aAtendimento = new JButton("Alocar Atendimento");
+        aAtendimento.addActionListener(this);
+        aAtendimento.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha8 = new JPanel();
+        Linha8.add(aAtendimento);
+        painel.add(Linha8);
 
         this.add(painel);
         this.setTitle("MENU");
@@ -657,7 +698,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                 }
             }
             else if(e.getSource() == fechar) {
-                System.exit(0);
+                appEquipe.dispose();
             }
         }
 
@@ -1209,7 +1250,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                 limpar();
 
             } else if (e.getSource() == finalizar) {
-                appEvento.setVisible(false);
+                //appEvento.setVisible(false);
+                appEvento.dispose();
 
             }
         }
@@ -1230,7 +1272,11 @@ public class ACMERescue extends JFrame implements ActionListener {
 
         }else if (e.getSource() == mostrarEventos) {
             mostrarEventosCadastrados();
+
+        }else if (e.getSource() == cAtendimento){
+            janelaAtendimento
         }
+
     }
 
     private void mostrarEventosCadastrados() {

@@ -6,6 +6,8 @@ public class Equipamento implements Comparable<Equipamento>{
 
 	private double custoDia;
 
+	private Equipe equipe;
+
 	public int getId() {
 		return id;
 	}
