@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import javax.swing.border.Border;
 import java.util.Collections;
 import java.util.Locale;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 public class ACMERescue extends JFrame implements ActionListener {
     private Scanner entrada = null;                 // Atributo para entrada de dados
     private PrintStream saidaPadrao = System.out;   // Guarda a saida padrao - tela (console)
     private JButton cEvento, cEquipe, cEquipamento, cAtendimento, mRelatorio, vEquipamento, aAtendimento;
-    private JLabel titulo;
+    private JLabel titulo, tituloevento;
     private AppEvento appEvento;
     private AppEquipe appEquipe;
     private AppEquipamento appEquipamento;
@@ -25,9 +28,15 @@ public class ACMERescue extends JFrame implements ActionListener {
     private ArrayList<Equipe> equipes;
     private ArrayList<Equipamento> equipamentos;
     private JButton mostrarEventos;
+    private LocalDate data;
+    private JTextArea campoEvento;
+    private JFrame janelaAtendimento;
+    private JPanel painelAtendimento, Titulo,  tituloCodigo;
 
     public ACMERescue() {
         super();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         eventos = new ArrayList<>();
         equipamentos = new ArrayList<>();
@@ -57,7 +66,7 @@ public class ACMERescue extends JFrame implements ActionListener {
         painel.setLayout(layout);
 
 
-        //Border border = BorderFactory.createLineBorder(Color.gray, 10);
+
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         Titulo.add(titulo);
         painel.add(Titulo);
@@ -123,6 +132,41 @@ public class ACMERescue extends JFrame implements ActionListener {
         this.setSize(800, 600);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
+
+
+
+        campoEvento = new JTextArea(10,20);
+        StringBuilder eventosStr = new StringBuilder("Eventos Cadastrados:\n");
+        for (Evento evento : eventos) {
+            eventosStr.append(evento.toString()).append("\n");
+        }
+        tituloevento = new JLabel("Insira o código do evento que você deseja cadastrar o atendimento");
+
+        janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
+        janelaAtendimento.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        janelaAtendimento.setSize(800, 600);
+
+        painelAtendimento = new JPanel();
+        painelAtendimento.setLayout(new BoxLayout(painelAtendimento, BoxLayout.Y_AXIS));
+
+        tituloCodigo = new JPanel(new FlowLayout());
+        tituloCodigo.add(tituloevento);
+
+        JTextField code = new JTextField(20);
+        JButton confirmaCodigo = new JButton("Confirmar código");
+
+        JPanel linhaCodePanel = new JPanel();
+        linhaCodePanel.setLayout(new FlowLayout());
+        linhaCodePanel.add(code);
+        confirmaCodigo.addActionListener(this);
+
+        painelAtendimento.add(campoEvento);
+        painelAtendimento.add(tituloevento);
+        painelAtendimento.add(linhaCodePanel);
+        painelAtendimento.add(confirmaCodigo);
+
+        janelaAtendimento.getContentPane().add(painelAtendimento);
+
 
     }
 
@@ -209,7 +253,6 @@ public class ACMERescue extends JFrame implements ActionListener {
 
             //CRIA JANELA
             this.setTitle("Cadastra Equipamentos");
-            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
             //LAYOUT DO PANEL PRINCIPAL BORDER
             JPanel container = new JPanel();
@@ -438,6 +481,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                 public void actionPerformed(ActionEvent e) {
                     if(e.getSource() == finalizarButton){
                         fechaAplicativo();
+                        menuVisivel();
+
                     }
                 }
             });
@@ -637,7 +682,6 @@ public class ACMERescue extends JFrame implements ActionListener {
             this.add(container);
             this.setSize(600, 200);
             this.setTitle("Cadastro de equipe");
-            this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             this.pack();
             this.setLocationRelativeTo(null);
             this.setVisible(true);
@@ -691,6 +735,7 @@ public class ACMERescue extends JFrame implements ActionListener {
             }
             else if(e.getSource() == fechar) {
                 appEquipe.dispose();
+                menuVisivel();
             }
         }
 
@@ -1242,9 +1287,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                 limpar();
 
             } else if (e.getSource() == finalizar) {
-                //appEvento.setVisible(false);
                 appEvento.dispose();
-
+                menuVisivel();
             }
         }
     }
@@ -1254,13 +1298,14 @@ public class ACMERescue extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cEvento) {
             iniciarAppEvento();
+            this.setVisible(false);
 
         }else if (e.getSource()==cEquipamento){
             iniciarAppEquipamento();
-
+            this.setVisible(false);
         } else if (e.getSource()==cEquipe){
             iniciarAppEquipe();
-
+            this.setVisible(false);
 
         }else if (e.getSource() == mostrarEventos) {
             mostrarEventosCadastrados();
@@ -1269,29 +1314,13 @@ public class ACMERescue extends JFrame implements ActionListener {
             abreCadastroAtendimento();
         }
 
+
     }
 
-    private void abreCadastroAtendimento(){
-        JTextField campoEvento = new JTextField(40);
-        String eventosStr = "Eventos Cadastrados:\n";
-        for (Evento evento : eventos) {
-            eventosStr += evento.toString()+"\n";
-        }
-        campoEvento.setBackground(Color.white);
-        campoEvento.setSize(30,80);
-        campoEvento.setText(eventosStr);
-        JFrame janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
-        janelaAtendimento.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        janelaAtendimento.setSize(800, 600);
-        JPanel painelAtendimento = new JPanel();
-        painelAtendimento.setLayout(new BoxLayout(painelAtendimento,BoxLayout.Y_AXIS));
 
-        painelAtendimento.add(campoEvento);
-        campoEvento.setEditable(false);
 
-        janelaAtendimento.getContentPane().add(painelAtendimento);
+    private void abreCadastroAtendimento() {
         janelaAtendimento.setVisible(true);
-
     }
 
     private void mostrarEventosCadastrados() {
@@ -1300,6 +1329,9 @@ public class ACMERescue extends JFrame implements ActionListener {
             eventosStr.append(evento.toString()).append("\n");
         }
         JOptionPane.showMessageDialog(this, eventosStr.toString(), "Eventos Cadastrados", JOptionPane.INFORMATION_MESSAGE);
+    }
+    private void menuVisivel(){
+        this.setVisible(true);
     }
 
 

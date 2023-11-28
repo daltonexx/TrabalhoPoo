@@ -1,17 +1,11 @@
 public class Atendimento {
 
 	private int cod;
-
 	private String dataInicio;
-
 	private int duracao;
-
 	private Util util;
-
 	private String status;
-
 	private Equipe equipe;
-
 	private Evento evento;
 
 	public int getCod() {
