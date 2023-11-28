@@ -1,4 +1,4 @@
-public class Equipamento {
+public class Equipamento implements Comparable<Equipamento>{
 
 	private int id;
 
@@ -22,5 +22,9 @@ public class Equipamento {
 		this.id = id;
 		this.nome = nome;
 		this.custoDia = custoDia;
+	}
+	@Override
+	public int compareTo(Equipamento equipamento) {
+		return Integer.compare(this.id, equipamento.id);
 	}
 }
