@@ -50,14 +50,6 @@ public class ACMERescue extends JFrame implements ActionListener {
         titulo = new JLabel("Menu de atendimento ACMERescue");
 
 
-        JFrame janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
-        janelaAtendimento.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Fecha apenas a janela atual
-        janelaAtendimento.setSize(400, 300);
-
-        JPanel painelAtendimento = new JPanel();
-        painelAtendimento.setLayout(new FlowLayout());
-
-
         JPanel painel = new JPanel();
         BoxLayout layout = new BoxLayout(painel, BoxLayout.Y_AXIS);
         //FlowLayout flow = new FlowLayout();
@@ -1274,8 +1266,31 @@ public class ACMERescue extends JFrame implements ActionListener {
             mostrarEventosCadastrados();
 
         }else if (e.getSource() == cAtendimento){
-            janelaAtendimento
+            abreCadastroAtendimento();
         }
+
+    }
+
+    private void abreCadastroAtendimento(){
+        JTextField campoEvento = new JTextField(40);
+        String eventosStr = "Eventos Cadastrados:\n";
+        for (Evento evento : eventos) {
+            eventosStr += evento.toString()+"\n";
+        }
+        campoEvento.setBackground(Color.white);
+        campoEvento.setSize(30,80);
+        campoEvento.setText(eventosStr);
+        JFrame janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
+        janelaAtendimento.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        janelaAtendimento.setSize(800, 600);
+        JPanel painelAtendimento = new JPanel();
+        painelAtendimento.setLayout(new BoxLayout(painelAtendimento,BoxLayout.Y_AXIS));
+
+        painelAtendimento.add(campoEvento);
+        campoEvento.setEditable(false);
+
+        janelaAtendimento.getContentPane().add(painelAtendimento);
+        janelaAtendimento.setVisible(true);
 
     }
 
