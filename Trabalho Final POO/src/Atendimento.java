@@ -24,6 +24,14 @@ public class Atendimento {
 		return status;
 	}
 
+	public Equipe getEquipe() {
+		return equipe;
+	}
+
+	public Evento getEvento() {
+		return evento;
+	}
+
 	public Atendimento(int cod, String dataInicio, int duracao, String status, Equipe equipe, Evento evento, Util util) {
 		this.cod = cod;
 		this.dataInicio = dataInicio;

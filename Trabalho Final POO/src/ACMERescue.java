@@ -20,18 +20,18 @@ public class ACMERescue extends JFrame implements ActionListener {
     private Scanner entrada = null;                 // Atributo para entrada de dados
     private PrintStream saidaPadrao = System.out;   // Guarda a saida padrao - tela (console)
     private JButton cEvento, cEquipe, cEquipamento, cAtendimento, mRelatorio, vEquipamento, aAtendimento;
-    private JLabel titulo, tituloevento;
+    private JLabel titulo;
     private AppEvento appEvento;
     private AppEquipe appEquipe;
     private AppEquipamento appEquipamento;
+    private CadastraAtendimento cadastraAtendimento;
     private ArrayList<Evento> eventos;
     private ArrayList<Equipe> equipes;
+    private ArrayList<Atendimento> atendimentos;
     private ArrayList<Equipamento> equipamentos;
     private JButton mostrarEventos;
     private LocalDate data;
-    private JTextArea campoEvento;
-    private JFrame janelaAtendimento;
-    private JPanel painelAtendimento, Titulo,  tituloCodigo;
+    private JPanel Titulo;
 
     public ACMERescue() {
         super();
@@ -134,41 +134,98 @@ public class ACMERescue extends JFrame implements ActionListener {
         this.setVisible(true);
 
 
-
-        campoEvento = new JTextArea(10,20);
-        StringBuilder eventosStr = new StringBuilder("Eventos Cadastrados:\n");
-        for (Evento evento : eventos) {
-            eventosStr.append(evento.toString()).append("\n");
-        }
-        tituloevento = new JLabel("Insira o código do evento que você deseja cadastrar o atendimento");
-
-        janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
-        janelaAtendimento.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        janelaAtendimento.setSize(800, 600);
-
-        painelAtendimento = new JPanel();
-        painelAtendimento.setLayout(new BoxLayout(painelAtendimento, BoxLayout.Y_AXIS));
-
-        tituloCodigo = new JPanel(new FlowLayout());
-        tituloCodigo.add(tituloevento);
-
-        JTextField code = new JTextField(20);
-        JButton confirmaCodigo = new JButton("Confirmar código");
-
-        JPanel linhaCodePanel = new JPanel();
-        linhaCodePanel.setLayout(new FlowLayout());
-        linhaCodePanel.add(code);
-        confirmaCodigo.addActionListener(this);
-
-        painelAtendimento.add(campoEvento);
-        painelAtendimento.add(tituloevento);
-        painelAtendimento.add(linhaCodePanel);
-        painelAtendimento.add(confirmaCodigo);
-
-        janelaAtendimento.getContentPane().add(painelAtendimento);
-
-
     }
+
+    public class CadastraAtendimento extends JFrame implements ActionListener{
+        private JTextArea campoEvento;
+        private JFrame janelaAtendimento;
+        private JPanel painelAtendimento, tituloCodigo, linhaCodePanel;
+        private JLabel tituloevento;
+        private JButton confirmaCodigo, finalizar;
+        private JTextField code;
+
+
+        public CadastraAtendimento() {
+            campoEvento = new JTextArea(10, 20);
+            StringBuilder eventosStr = new StringBuilder("Eventos Cadastrados:\n");
+            for (Evento evento : eventos) {
+                eventosStr.append(evento.toString()).append("\n");
+            }
+            campoEvento.setBackground(Color.white);
+            campoEvento.setSize(30, 80);
+            campoEvento.setText(eventosStr.toString());
+
+
+            tituloevento = new JLabel("Insira o código do evento que você deseja cadastrar o atendimento");
+
+
+
+            janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
+            janelaAtendimento.setSize(800, 600);
+
+            painelAtendimento = new JPanel();
+            painelAtendimento.setLayout(new BoxLayout(painelAtendimento, BoxLayout.Y_AXIS));
+
+            tituloCodigo = new JPanel(new FlowLayout());
+            tituloCodigo.add(tituloevento);
+
+            code = new JTextField(20);
+            confirmaCodigo = new JButton("Confirmar código");
+
+            linhaCodePanel = new JPanel();
+            linhaCodePanel.setLayout(new FlowLayout());
+            linhaCodePanel.add(code);
+            confirmaCodigo.addActionListener(this);
+
+            finalizar = new JButton("Finalizar");
+            finalizar.addActionListener(this);
+
+
+            painelAtendimento.add(campoEvento);
+            painelAtendimento.add(tituloevento);
+            painelAtendimento.add(linhaCodePanel);
+            painelAtendimento.add(confirmaCodigo);
+            painelAtendimento.add(finalizar);
+
+            janelaAtendimento.getContentPane().add(painelAtendimento);
+            janelaAtendimento.setVisible(true);
+
+        }
+
+        public void mostraAtendimento(){
+            
+        }
+
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            if(e.getSource()==finalizar){
+                janelaAtendimento.dispose();
+                menuVisivel();
+
+            } else if(e.getSource() == confirmaCodigo){
+                for(Evento x: eventos){
+                    if(x.getCodigo().equals(code.getText())){
+                        for(Atendimento a: atendimentos){
+                            if(a.getEvento().equals(x)){
+                                code.setText("ERRO: Evento já está cadastrado em um atendimento");
+                            }
+
+                        }
+                        mostraAtendimento();;
+                    } else{
+                        code.setText("ERRO: Não há nenhum evento com esse código");
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
 
     public class AppEquipamento extends JFrame{
         private JButton mostrarButton;
@@ -570,6 +627,9 @@ public class ACMERescue extends JFrame implements ActionListener {
 
     }
 
+    private void abreCadastroAtendimento(){
+        cadastraAtendimento = new CadastraAtendimento();
+    }
 
     private void iniciarAppEvento() {
         appEvento = new AppEvento(eventos);
@@ -1312,16 +1372,13 @@ public class ACMERescue extends JFrame implements ActionListener {
 
         }else if (e.getSource() == cAtendimento){
             abreCadastroAtendimento();
+            this.setVisible(false);
         }
 
 
     }
 
 
-
-    private void abreCadastroAtendimento() {
-        janelaAtendimento.setVisible(true);
-    }
 
     private void mostrarEventosCadastrados() {
         StringBuilder eventosStr = new StringBuilder("Eventos Cadastrados:\n");
