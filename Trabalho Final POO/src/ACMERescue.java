@@ -22,7 +22,8 @@ import java.time.format.DateTimeParseException;
 public class ACMERescue extends JFrame implements ActionListener {
     private Scanner entrada = null;                 // Atributo para entrada de dados
     private PrintStream saidaPadrao = System.out;   // Guarda a saida padrao - tela (console)
-    private JButton cEvento, cEquipe, cEquipamento, cAtendimento, mRelatorio, vEquipamento, aAtendimento;
+    private JButton cEvento, cEquipe, cEquipamento, cAtendimento, mRelatorio, vEquipamento, aAtendimento, consultaAtendimento, alteraAtendimento;
+    private JButton carregaDadosIniciais, salvaDados, carregaDados, finalizaSistema;
     private JLabel titulo;
     private AppEvento appEvento;
     private AppEquipe appEquipe;
@@ -83,13 +84,6 @@ public class ACMERescue extends JFrame implements ActionListener {
         Linha1.add(cEvento);
         painel.add(Linha1);
 
-        mostrarEventos = new JButton("Mostrar Eventos Cadastrados");
-        mostrarEventos.addActionListener(this);
-        mostrarEventos.setPreferredSize(new Dimension(200, 50));
-        JPanel Linha2 = new JPanel();
-        Linha2.add(mostrarEventos);
-        painel.add(Linha2);
-
         cEquipamento = new JButton("Cadastrar Equipamento");
         cEquipamento.addActionListener(this);
         cEquipamento.setPreferredSize(new Dimension(200, 50));
@@ -131,6 +125,50 @@ public class ACMERescue extends JFrame implements ActionListener {
         JPanel Linha8 = new JPanel();
         Linha8.add(aAtendimento);
         painel.add(Linha8);
+
+        consultaAtendimento = new JButton("Consultar Atendimento");
+        consultaAtendimento.addActionListener(this);
+        consultaAtendimento.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha9 = new JPanel();
+        Linha9.add(consultaAtendimento);
+        painel.add(Linha9);
+
+        alteraAtendimento = new JButton("Alterar Atendimento");
+        alteraAtendimento.addActionListener(this);
+        alteraAtendimento.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha10 = new JPanel();
+        Linha10.add(alteraAtendimento);
+        painel.add(Linha10);
+
+        carregaDadosIniciais = new JButton("Carregar Dados Iniciais");
+        carregaDadosIniciais.addActionListener(this);
+        carregaDadosIniciais.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha11 = new JPanel();
+        Linha11.add(carregaDadosIniciais);
+        painel.add(Linha11);
+
+        salvaDados = new JButton("Salvar Dados");
+        salvaDados.addActionListener(this);
+        salvaDados.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha12 = new JPanel();
+        Linha12.add(salvaDados);
+        painel.add(Linha12);
+
+        carregaDados = new JButton("Carregar Dados");
+        carregaDados.addActionListener(this);
+        carregaDados.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha13 = new JPanel();
+        Linha13.add(carregaDados);
+        painel.add(Linha13);
+
+        finalizaSistema = new JButton("Finalizar Sistema");
+        finalizaSistema.addActionListener(this);
+        finalizaSistema.setPreferredSize(new Dimension(200, 50));
+        JPanel Linha14 = new JPanel();
+        Linha14.add(finalizaSistema);
+        painel.add(Linha14);
+
+
 
         this.add(painel);
         this.setTitle("MENU");
@@ -280,12 +318,15 @@ public class ACMERescue extends JFrame implements ActionListener {
             else if (e.getSource() == confirmaCodigo) {
                 Mensagem.setText("");
                 boolean eventoEncontrado = false;
+                if(eventos.isEmpty()){
+                    mensagemErro.setText("Erro: Nenhum evento cadastrado");
+                }
                 for (Evento x : eventos) {
                     if (x.getCodigo().equals(code.getText())) {
                         eventoEncontrado = true;
                         for (Atendimento a : atendimentos) {
                             if (a.getEvento().equals(x)) {
-                                mensagemErro.setText("ERRO: Evento já está cadastrado em um atendimento");
+                                mensagemErro.setText("Erro: Evento já está cadastrado em um atendimento");
                                 return;
                             }
                         }
@@ -296,7 +337,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                     }
                 }
                 if (!eventoEncontrado) {
-                    mensagemErro.setText("ERRO: Não há nenhum evento com esse código");
+                    mensagemErro.setText("Erro: Não há nenhum evento com esse código");
                 }
             } else if (e.getSource() == confirmaCadastro) {
                 int cod;
@@ -1487,9 +1528,6 @@ public class ACMERescue extends JFrame implements ActionListener {
         } else if (e.getSource()==cEquipe){
             iniciarAppEquipe();
             this.setVisible(false);
-
-        }else if (e.getSource() == mostrarEventos) {
-            mostrarEventosCadastrados();
 
         }else if (e.getSource() == cAtendimento){
             abreCadastroAtendimento();
