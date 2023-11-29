@@ -1660,15 +1660,54 @@ public class ACMERescue extends JFrame implements ActionListener {
         }
         public class carregaArquivos extends JFrame implements ActionListener{
             private JTextField nomeArquivo;
+            private JLabel labelNomeArquivo;
             private JButton confirmaNome;
+            private JPanel container;
+            private JScrollPane scrollCadastros;
+            private JTextArea cadastros;
+            carregaArquivos(){
+                super();
+
+                //LAYOUTS
+                BorderLayout borderLayout = new BorderLayout();
+                FlowLayout flowLayout = new FlowLayout();
+
+                //CONTAINER
+                container = new JPanel();
+                this.add(container);
+
+                //BORDER SOUTH
+                JPanel borderSouth = new JPanel();
+                borderSouth.setLayout(flowLayout);
+                container.add(borderSouth, BorderLayout.SOUTH);
+                labelNomeArquivo = new JLabel("Nome arquivo: ");
+                nomeArquivo = new JTextField();
+                borderSouth.add(labelNomeArquivo);
+                borderSouth.add(nomeArquivo);
+
+                //BORDER CENTER
+                cadastros = new JTextArea();
+                cadastros.setEditable(false);
+                cadastros.setFocusable(false);
+                scrollCadastros = new JScrollPane(cadastros);
+                container.add(scrollCadastros, BorderLayout.CENTER);
+
+                //BORDER NORTH
+                confirmaNome = new JButton("OK");
+                container.add(confirmaNome);
+            }
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == confirmaNome){
-
+                    try {
+                        cadastraEventos(nomeArquivo.getText());
+                    }catch (Exception exc){
+                        System.out.println("Erro leitura evento: " + e);
+                    }
                 }
             }
             private void cadastraEquipe(String nome){
-                cadastra(nome + "-EQUIPES.csv");
+                cadastra(nome + "-EQUIPES.CSV");
                 String linha = entrada.nextLine();
                 while(linha != null){
                     boolean certo = true;
