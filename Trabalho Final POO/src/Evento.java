@@ -33,6 +33,6 @@ public class Evento {
 
 	@Override
 	public String toString() {
-		return "Evento: \n "+  "codigo= " + codigo  + ", data= " + data  + ", latitude= " + latitude + ", longitude= " + longitude ;
+		return "codigo= " + codigo  + ", data= " + data  + ", latitude= " + latitude + ", longitude= " + longitude ;
 	}
 }

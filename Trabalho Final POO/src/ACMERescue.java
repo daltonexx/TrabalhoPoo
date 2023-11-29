@@ -1,8 +1,4 @@
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
@@ -11,11 +7,9 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.border.Border;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
 import java.time.format.DateTimeParseException;
 
 
@@ -30,6 +24,7 @@ public class ACMERescue extends JFrame implements ActionListener {
     private AppEquipamento appEquipamento;
     private CadastraAtendimento cadastraAtendimento;
     private VincularEquipamento vincularEquipamento;
+    private CarregaArquivos carregaArquivos;
     private ArrayList<Evento> eventos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Atendimento> atendimentos;
@@ -201,6 +196,7 @@ public class ACMERescue extends JFrame implements ActionListener {
             campoEvento.setSize(20, 10);
             campoEvento.setText(eventosStr.toString());
             campoEvento.setEditable(false);
+            campoEvento.setFocusable(false);
 
 
             tituloevento = new JLabel("Insira o código do evento que você deseja cadastrar o atendimento");
@@ -801,6 +797,10 @@ public class ACMERescue extends JFrame implements ActionListener {
 
     private void abreVincularEquipamento(){
         vincularEquipamento = new VincularEquipamento(equipamentos,equipes);
+    }
+
+    private void abreCarregaArquivos(){
+        carregaArquivos = new CarregaArquivos();
     }
 
 
@@ -1535,6 +1535,9 @@ public class ACMERescue extends JFrame implements ActionListener {
         }else if (e.getSource() == vEquipamento){
             abreVincularEquipamento();
             this.setVisible(false);
+        }else if (e.getSource() == carregaDados){
+            abreCarregaArquivos();
+            this.setVisible(false);
         }
 
 
@@ -1553,24 +1556,24 @@ public class ACMERescue extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    private class VincularEquipamento extends JFrame implements ActionListener{
+    private class VincularEquipamento extends JFrame implements ActionListener {
         private JPanel container;
         private JList listEquipamentos, listEquipes;
         private JScrollPane scrollEquipamentos, scrollEquipes;
         private JTextArea console;
         private JButton vincular, finalizar, limparConsole;
 
-        VincularEquipamento(ArrayList<Equipamento> equipamentos, ArrayList<Equipe> equipes){
+        VincularEquipamento(ArrayList<Equipamento> equipamentos, ArrayList<Equipe> equipes) {
             super();
-            if(!equipamentos.isEmpty() && !equipes.isEmpty()){
+            if (!equipamentos.isEmpty() && !equipes.isEmpty()) {
 
                 //JLists
                 DefaultListModel<String> stringEquipamentos = new DefaultListModel<String>();
                 DefaultListModel<String> stringEquipes = new DefaultListModel<String>();
-                for(Equipamento equipamento : equipamentos){
+                for (Equipamento equipamento : equipamentos) {
                     stringEquipamentos.addElement(equipamento.getNome());
                 }
-                for(Equipe equipe : equipes){
+                for (Equipe equipe : equipes) {
                     stringEquipes.addElement(equipe.getCodinome());
                 }
                 listEquipes = new JList<String>(stringEquipes);
@@ -1587,14 +1590,14 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                 //Border Layout West
                 scrollEquipamentos = new JScrollPane(listEquipamentos);
-                scrollEquipamentos.setMinimumSize(new Dimension(200,200));
-                scrollEquipamentos.setPreferredSize(new Dimension(300,200));
+                scrollEquipamentos.setMinimumSize(new Dimension(200, 200));
+                scrollEquipamentos.setPreferredSize(new Dimension(300, 200));
                 container.add(scrollEquipamentos, BorderLayout.WEST);
 
                 //Border Layout East
                 scrollEquipes = new JScrollPane(listEquipes);
-                scrollEquipes.setMinimumSize(new Dimension(200,200));
-                scrollEquipes.setPreferredSize(new Dimension(300,200));
+                scrollEquipes.setMinimumSize(new Dimension(200, 200));
+                scrollEquipes.setPreferredSize(new Dimension(300, 200));
                 container.add(scrollEquipes, BorderLayout.EAST);
 
                 //Border Layout Center
@@ -1617,7 +1620,7 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                 //VISIVEL/PACK
                 this.setVisible(true);
-                this.setSize(1000,800);
+                this.setSize(1000, 800);
                 this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
                 //DEBBUG
@@ -1627,14 +1630,13 @@ public class ACMERescue extends JFrame implements ActionListener {
                 vincular.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if(e.getSource() == vincular){
+                        if (e.getSource() == vincular) {
                             Equipe equipe = equipes.get(listEquipes.getSelectedIndex());
                             Equipamento equipamento = equipamentos.get(listEquipamentos.getSelectedIndex());
-                            if(equipamento.getEquipe() == null){
+                            if (equipamento.getEquipe() == null) {
                                 equipamento.setEquipe(equipe);
                                 equipe.addEquipamento(equipamento);
-                            }
-                            else{
+                            } else {
                                 console.append("ERRO, EQUIPAMENTO JA VINCULADO A OUTRA EQUIPE!\n");
                             }
                         }
@@ -1644,7 +1646,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                 limparConsole.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if(e.getSource() == limparConsole){
+                        if (e.getSource() == limparConsole) {
                             console.setText("");
                             listEquipamentos.setSelectedIndex(0);
                             listEquipes.setSelectedIndex(0);
@@ -1655,14 +1657,13 @@ public class ACMERescue extends JFrame implements ActionListener {
                 finalizar.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if(e.getSource() == finalizar){
+                        if (e.getSource() == finalizar) {
                             menuVisivel();
                             dispose();
                         }
                     }
                 });
-            }
-            else {
+            } else {
                 container = new JPanel();
                 finalizar = new JButton("Voltar");
                 console = new JTextArea();
@@ -1680,7 +1681,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                 finalizar.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if(e.getSource() == finalizar){
+                        if (e.getSource() == finalizar) {
                             menuVisivel();
                             dispose();
                         }
@@ -1692,266 +1693,367 @@ public class ACMERescue extends JFrame implements ActionListener {
                 this.setDefaultCloseOperation(EXIT_ON_CLOSE);
             }
         }
+
         @Override
         public void actionPerformed(ActionEvent e) {
 
         }
-        public class carregaArquivos extends JFrame implements ActionListener{
-            private JTextField nomeArquivo;
-            private JLabel labelNomeArquivo;
-            private JButton confirmaNome;
-            private JPanel container;
-            private JScrollPane scrollCadastros;
-            private JTextArea cadastros;
-            carregaArquivos(){
-                super();
+    }
+    public class CarregaArquivos extends JFrame implements ActionListener{
+        private JTextField nomeArquivo;
+        private JLabel labelNomeArquivo;
+        private JButton confirmaNome, voltar;
+        private JPanel container;
+        private JScrollPane scrollCadastros;
+        private JTextArea cadastros;
+        CarregaArquivos(){
+            super();
 
-                //LAYOUTS
-                BorderLayout borderLayout = new BorderLayout();
-                FlowLayout flowLayout = new FlowLayout();
+            //LAYOUTS
+            BorderLayout borderLayout = new BorderLayout();
+            FlowLayout flowLayout = new FlowLayout();
 
-                //CONTAINER
-                container = new JPanel();
-                this.add(container);
+            //CONTAINER
+            container = new JPanel();
+            container.setLayout(borderLayout);
+            this.add(container);
 
-                //BORDER SOUTH
-                JPanel borderSouth = new JPanel();
-                borderSouth.setLayout(flowLayout);
-                container.add(borderSouth, BorderLayout.SOUTH);
-                labelNomeArquivo = new JLabel("Nome arquivo: ");
-                nomeArquivo = new JTextField();
-                borderSouth.add(labelNomeArquivo);
-                borderSouth.add(nomeArquivo);
+            //BORDER NORTH
+            JPanel borderNorth = new JPanel();
+            borderNorth.setLayout(flowLayout);
+            container.add(borderNorth, BorderLayout.NORTH);
+            labelNomeArquivo = new JLabel("Nome arquivo: ");
+            nomeArquivo = new JTextField(20);
+            borderNorth.add(labelNomeArquivo);
+            borderNorth.add(nomeArquivo);
 
-                //BORDER CENTER
-                cadastros = new JTextArea();
-                cadastros.setEditable(false);
-                cadastros.setFocusable(false);
-                scrollCadastros = new JScrollPane(cadastros);
-                container.add(scrollCadastros, BorderLayout.CENTER);
+            //BORDER CENTER
+            cadastros = new JTextArea(20,50);
+            cadastros.setEditable(false);
+            cadastros.setFocusable(false);
+            scrollCadastros = new JScrollPane(cadastros);
+            container.add(scrollCadastros, BorderLayout.CENTER);
 
-                //BORDER NORTH
-                confirmaNome = new JButton("OK");
-                container.add(confirmaNome);
-            }
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(e.getSource() == confirmaNome){
-                    try {
-                        cadastraEventos(nomeArquivo.getText());
-                    }catch (Exception exc){
-                        System.out.println("Erro leitura evento: " + e);
+            //BORDER SOUTH
+            JPanel borderSouth = new JPanel();
+            borderSouth.setLayout(flowLayout);
+            container.add(borderSouth, BorderLayout.SOUTH);
+            confirmaNome = new JButton("OK");
+            voltar = new JButton("Voltar");
+            borderSouth.add(confirmaNome);
+            borderSouth.add(voltar);
+
+            confirmaNome.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == confirmaNome){
+                        try {
+                            cadastraEventos(nomeArquivo.getText());
+                        }catch (Exception exc){
+                            cadastros.append("Erro leitura evento: " + exc);
+                        }
+
+                        try{
+                            cadastraEquipe(nomeArquivo.getText());
+                        }catch (Exception exc){
+                            cadastros.append("Erro leitura equipe: " + exc);
+                        }
                     }
                 }
+            });
+
+            voltar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(e.getSource() == voltar){
+                        menuVisivel();
+                        dispose();
+                    }
+                }
+            });
+
+            //SET VISIBLE
+            this.setVisible(true);
+            this.setSize(1000,800);
+
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+        private void cadastraEquipe(String nome){
+            cadastra(nome + "-EQUIPES.CSV");
+            entrada.nextLine();
+            String linha = entrada.nextLine();
+            while(linha != null){
+                boolean certo = true;
+                int quantidade = 0;
+                double latitude = 0.0;
+                double longitude = 0.0;
+                String[] equipeAtributos = linha.split(";");
+                String codinome = equipeAtributos[0];
+                String strQuantidade = equipeAtributos[1];
+                try{
+                    quantidade = Integer.parseInt(strQuantidade);
+                }catch (Exception e){
+                    certo = false;
+                }
+                String strLatitude = equipeAtributos[2];
+                try{
+                    latitude = Double.parseDouble(strLatitude);
+                }catch (Exception e){
+                    certo = false;
+                }
+                String strLongitude = equipeAtributos[3];
+                try{
+                    longitude = Double.parseDouble(strLongitude);
+                }catch (Exception e){
+                    certo = false;
+                }
+                if(certo){
+                    Equipe equipe = new Equipe(codinome,quantidade,latitude,longitude);
+                    equipes.add(equipe);
+                    System.out.println(equipe);
+                }
+                if(entrada.hasNextLine()){
+                    linha = entrada.nextLine();
+                }else {
+                    linha = null;
+                }
             }
-            private void cadastraEquipe(String nome){
-                cadastra(nome + "-EQUIPES.CSV");
-                String linha = entrada.nextLine();
-                while(linha != null){
-                    boolean certo = true;
-                    int quantidade = 0;
-                    double latitude = 0.0;
-                    double longitude = 0.0;
-                    String[] equipeAtributos = linha.split(";");
-                    String codinome = equipeAtributos[0];
-                    String strQuantidade = equipeAtributos[1];
-                    try{
-                        quantidade = Integer.parseInt(strQuantidade);
-                    }catch (Exception e){
-                        certo = false;
+        }
+
+        private void cadastraEquipamentos(String nome, ArrayList<Equipe> equipes){
+            cadastra(nome + "-EQUIPAMENTOS.CSV");
+            entrada.nextLine();
+            String linha = entrada.nextLine();
+            while(linha != null){
+                boolean certo = true;
+                String[] equipamentoAtributos = linha.split(";");
+                int id = 0;
+                double custoDiario = 0.0;
+                int tipo = 0;
+                Combustivel combustivel = null;
+                int capacidadeBarco = 0;
+                double capacidadeTanque = 0.0;
+                double carga = 0.0;
+                Equipe equipe = null;
+                String strId = equipamentoAtributos[0];
+                try{
+                    id = Integer.parseInt(strId);
+                }catch (Exception e){
+                    certo = false;
+                }
+                String nomeEquip = equipamentoAtributos[1];
+                String strCusto = equipamentoAtributos[2];
+                try{
+                    custoDiario = Double.parseDouble(strCusto);
+                }catch (Exception e){
+                    certo = false;
+                }
+                String codinome = equipamentoAtributos[3];
+                for(Equipe equi : equipes){
+                    if(equi.getCodinome().equals(codinome)){
+                        equipe = equi;
                     }
-                    String strLatitude = equipeAtributos[2];
+                }
+                String strTipo = equipamentoAtributos[4];
+                tipo = Integer.parseInt(strTipo);
+                if(tipo == 1){
+                    String strCapBarco = equipamentoAtributos[5];
                     try{
-                        latitude = Double.parseDouble(strLatitude);
-                    }catch (Exception e){
-                        certo = false;
-                    }
-                    String strLongitude = equipeAtributos[3];
-                    try{
-                        longitude = Double.parseDouble(strLongitude);
+                        capacidadeBarco = Integer.parseInt(strCapBarco);
                     }catch (Exception e){
                         certo = false;
                     }
                     if(certo){
-                        Equipe equipe = new Equipe(codinome,quantidade,latitude,longitude);
-                        equipes.add(equipe);
-                        System.out.println(equipe);
-                    }
-                    linha = entrada.nextLine();
-                }
-            }
-
-            private void cadastraEquipamentos(String nome, ArrayList<Equipe> equipes){
-                cadastra(nome + "-EQUIPAMENTOS.CSV");
-                String linha = entrada.nextLine();
-                while(linha != null){
-                    boolean certo = true;
-                    String[] equipamentoAtributos = linha.split(";");
-                    int id = 0;
-                    double custoDiario = 0.0;
-                    int tipo = 0;
-                    Combustivel combustivel = null;
-                    int capacidadeBarco = 0;
-                    double capacidadeTanque = 0.0;
-                    double carga = 0.0;
-                    Equipe equipe = null;
-                    String strId = equipamentoAtributos[0];
-                    try{
-                        id = Integer.parseInt(strId);
-                    }catch (Exception e){
-                        certo = false;
-                    }
-                    String nomeEquip = equipamentoAtributos[1];
-                    String strCusto = equipamentoAtributos[2];
-                    try{
-                        custoDiario = Double.parseDouble(strCusto);
-                    }catch (Exception e){
-                        certo = false;
-                    }
-                    String codinome = equipamentoAtributos[3];
-                    for(Equipe equi : equipes){
-                       if(equi.getCodinome().equals(codinome)){
-                           equipe = equi;
-                       }
-                    }
-                    String strTipo = equipamentoAtributos[4];
-                    tipo = Integer.parseInt(strTipo);
-                    if(tipo == 1){
-                        String strCapBarco = equipamentoAtributos[5];
-                        try{
-                            capacidadeBarco = Integer.parseInt(strCapBarco);
-                        }catch (Exception e){
-                            certo = false;
-                        }
-                        if(certo){
+                        if(!equipamentosRepetido(id)){
                             Barco barco = new Barco(id,nome,custoDiario,equipe,capacidadeBarco);
                             equipamentos.add(barco);
                             System.out.println(barco);
                         }
-                    } else if (tipo == 2) {
-                        String strCapTanque = equipamentoAtributos[5];
-                        try{
-                            capacidadeTanque = Double.parseDouble(strCapTanque);
-                        }catch (Exception e){
-                            certo = false;
+                        else{
+                            cadastros.append("ID REPETIDO");
                         }
-                        if(certo){
+                    }
+                } else if (tipo == 2) {
+                    String strCapTanque = equipamentoAtributos[5];
+                    try{
+                        capacidadeTanque = Double.parseDouble(strCapTanque);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    if(certo){
+                        if(!equipamentosRepetido(id)){
                             CaminhaoTanque tanque = new CaminhaoTanque(id,nome,custoDiario,equipe,capacidadeTanque);
+                            equipamentos.add(tanque);
+                            cadastros.append(tanque.toString() + "\n");
                         }
-                    } else if (tipo == 3) {
-                        String strCombustivel = equipamentoAtributos[5];
-                        try{
-                            for(Combustivel c : Combustivel.values()){
-                                if(c.getCombustivel().toUpperCase().equals(strCombustivel)){
-                                    combustivel = c;
-                                }
+                        else{
+                            cadastros.append("ID REPETIDO");
+                        }
+
+                    }
+                } else if (tipo == 3) {
+                    String strCombustivel = equipamentoAtributos[5];
+                    try{
+                        for(Combustivel c : Combustivel.values()){
+                            if(c.getCombustivel().toUpperCase().equals(strCombustivel)){
+                                combustivel = c;
                             }
-                        }catch (Exception e){
-                            certo = false;
                         }
-                        String strCarga = equipamentoAtributos[6];
-                        try {
-                            carga = Double.parseDouble(strCarga);
-                        }catch (Exception e){
-                            certo = false;
-                        }
-                        if(certo){
-                            Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
-                            equipamentos.add(escavadeira);
-                            System.out.println();
-                        }
-                    }
-                    linha = entrada.nextLine();
-                }
-            }
-
-            private void cadastraEventos(String nome){
-                cadastra(nome + "-EVENTOS.CSV");
-                String linha = entrada.nextLine();
-                while (linha != null){
-                    String[] atributosEvento = linha.split(";");
-                    boolean certo = true;
-                    double latitude = 0.0;
-                    double longitude = 0.0;
-                    int tipo = 0;
-                    double velocidade = 0.0;
-                    double precipitacao = 0.0;
-                    double magnitude = 0.0;
-                    int estiagem = 0;
-                    String codigo = atributosEvento[0];
-                    String data = atributosEvento[1];
-                    String strLatitude = atributosEvento[2];
-                    try{
-                        latitude = Integer.parseInt(strLatitude);
                     }catch (Exception e){
                         certo = false;
                     }
-                    String strLongitude = atributosEvento[3];
-                    try{
-                        longitude = Integer.parseInt(strLongitude);
+                    String strCarga = equipamentoAtributos[6];
+                    try {
+                        carga = Double.parseDouble(strCarga);
                     }catch (Exception e){
                         certo = false;
                     }
-                    String strTipo = atributosEvento[4];
-                    if(strTipo.equals("1")){
-                        String strVelocidade = atributosEvento[5];
-                        try {
-                            velocidade = Double.parseDouble(strVelocidade);
-                        }catch (Exception e){
-                            certo = false;
-                        }
-                        String strPrecipitacao = atributosEvento[6];
-                        try{
-                            precipitacao = Double.parseDouble(strPrecipitacao);
-                        }catch (Exception e){
-                            certo = false;
-                        }
-                        if(certo){
-                            Ciclone ciclone = new Ciclone(codigo,data,latitude,longitude,velocidade,precipitacao);
-                            eventos.add(ciclone);
-                            System.out.println(ciclone);
-                        }
+                    if(certo){
+                        Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
+                        equipamentos.add(escavadeira);
+                        cadastros.append(escavadeira.toString() + "\n");
                     }
-                    else if(strTipo.equals("2")){
-                        String strMagnitude = atributosEvento[5];
-                        try{
-                            magnitude = Double.parseDouble(strMagnitude);
-                        }catch (Exception e){
-                            certo = false;
-                        }
-                        if(certo){
-                            Terremoto terremoto = new Terremoto(codigo,data,latitude,longitude,magnitude);
-                            eventos.add(terremoto);
-                            System.out.println(terremoto);
-                        }
-                    }
-                    else if(strTipo.equals("3")){
-                        String strEstiagem = atributosEvento[5];
-                        try{
-                            estiagem = Integer.parseInt(strEstiagem);
-                        }catch (Exception e){
-                            certo = false;
-                        }
-                        if(certo){
-                            Seca seca = new Seca(codigo,data,latitude,longitude,estiagem);
-                        }
-                    }
+                }
+                if(entrada.hasNextLine()){
                     linha = entrada.nextLine();
+                }else {
+                    linha = null;
                 }
-            }
-
-            private void cadastra(String path){
-                try {
-                    BufferedReader streamEntrada = new BufferedReader(new FileReader(path));
-                    entrada = new Scanner(streamEntrada);   // Usa como entrada um arquivo
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-                Locale.setDefault(Locale.ENGLISH);   // Ajusta para ponto decimal
-                entrada.useLocale(Locale.ENGLISH);
             }
         }
-    }
 
+        private void cadastraEventos(String nome){
+            cadastra(nome + "-EVENTOS.CSV");
+            entrada.nextLine();
+            String linha = entrada.nextLine();
+            while (linha != null){
+                String[] atributosEvento = linha.split(";");
+                boolean certo = true;
+                double latitude = 0.0;
+                double longitude = 0.0;
+                int tipo = 0;
+                double velocidade = 0.0;
+                double precipitacao = 0.0;
+                double magnitude = 0.0;
+                int estiagem = 0;
+                String codigo = atributosEvento[0];
+                String data = atributosEvento[1];
+                String strLatitude = atributosEvento[2];
+                try{
+                    latitude = Double.parseDouble(strLatitude);
+                }catch (Exception e){
+                    cadastros.append("ERRO NA LATITUDE");
+                    certo = false;
+                }
+                String strLongitude = atributosEvento[3];
+                try{
+                    longitude = Double.parseDouble(strLongitude);
+                }catch (Exception e){
+                    cadastros.append("ERRO NA LONGITUDE");
+                    certo = false;
+                }
+                String strTipo = atributosEvento[4];
+                if(strTipo.equals("1")){
+                    String strVelocidade = atributosEvento[5];
+                    try {
+                        velocidade = Double.parseDouble(strVelocidade);
+                    }catch (Exception e){
+                        certo = false;
+                        cadastros.append("ERRO NA VELOCIDADE");
+                    }
+                    String strPrecipitacao = atributosEvento[6];
+                    try{
+                        precipitacao = Double.parseDouble(strPrecipitacao);
+                    }catch (Exception e){
+                        certo = false;
+                        cadastros.append("ERRO NA PRECIPITACAO");
+                    }
+                    if(certo){
+                        if(eventoUnico(codigo)){
+                            Ciclone ciclone = new Ciclone(codigo,data,latitude,longitude,velocidade,precipitacao);
+                            eventos.add(ciclone);
+                            cadastros.append(ciclone.toString() + "\n");
+                        }
+                        else {
+                            cadastros.append("ERRO CODIGO REPETIDO" + "\n");
+                        }
+                    }
+                }
+                else if(strTipo.equals("2")){
+                    String strMagnitude = atributosEvento[5];
+                    try{
+                        magnitude = Double.parseDouble(strMagnitude);
+                    }catch (Exception e){
+                        certo = false;
+                        cadastros.append("ERRO NA MAGNITUDE");
+                    }
+                    if(certo){
+                        if(eventoUnico(codigo)){
+                            Terremoto terremoto = new Terremoto(codigo,data,latitude,longitude,magnitude);
+                            eventos.add(terremoto);
+                            cadastros.append(terremoto.toString() + "\n");
+                        }else {
+                            cadastros.append("ERRO CODIGO REPETIDO" + "\n");
+                        }
+                    }
+                }
+                else if(strTipo.equals("3")){
+                    String strEstiagem = atributosEvento[5];
+                    try{
+                        estiagem = Integer.parseInt(strEstiagem);
+                    }catch (Exception e){
+                        certo = false;
+                        cadastros.append("ERRO NA MAGNITUDE");
+                    }
+                    if(certo){
+                        if(eventoUnico(codigo)){
+                            Seca seca = new Seca(codigo,data,latitude,longitude,estiagem);
+                            eventos.add(seca);
+                            cadastros.append(seca.toString() + "\n");
+                        }else {
+                            cadastros.append("ERRO CODIGO REPETIDO" + "\n");
+                        }
+                    }
+                }
+                if(entrada.hasNextLine()){
+                    linha = entrada.nextLine();
+                }else {
+                    linha = null;
+                }
+            }
+        }
+
+        private boolean eventoUnico(String codigo){
+            for(Evento evento : eventos){
+                if(evento.getCodigo().equals(codigo)){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private boolean equipamentosRepetido(int id){
+            for(Equipamento equipamento : equipamentos){
+                if(equipamento.getId() == id){
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void cadastra(String path){
+            try {
+                BufferedReader streamEntrada = new BufferedReader(new FileReader(path));
+                entrada = new Scanner(streamEntrada);   // Usa como entrada um arquivo
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            Locale.setDefault(Locale.ENGLISH);   // Ajusta para ponto decimal
+            entrada.useLocale(Locale.ENGLISH);
+        }
+    }
 }
 
