@@ -278,6 +278,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                 confirmaCadastro.setVisible(false);
             }
             else if (e.getSource() == confirmaCodigo) {
+                Mensagem.setText("");
                 boolean eventoEncontrado = false;
                 for (Evento x : eventos) {
                     if (x.getCodigo().equals(code.getText())) {
@@ -304,29 +305,34 @@ public class ACMERescue extends JFrame implements ActionListener {
                 } catch (NumberFormatException n) {
                     Mensagem.setText("Erro: o código tem que ser composto de números inteiro");
                     return;
-
                 }
+
+                for (Atendimento b : atendimentos) {
+                    if (b.getCod() == cod) {
+                        Mensagem.setText("Erro: código já cadastrado");
+                        return;
+                    }
+                }
+
                 int duracao;
                 try {
                     duracao = Integer.parseInt(duracaoAtendimento.getText());
                 } catch (NumberFormatException n) {
-                    Mensagem.setText("Erro: a duração tem que ser composto de números inteiro");
+                    Mensagem.setText("Erro: a duração tem que ser composta de números inteiro");
                     return;
-
                 }
+
                 String dataString = dataAtendimento.getText();
                 try {
                     LocalDate data = LocalDate.parse(dataString, formatter);
                     Mensagem.setText("");
                 } catch (DateTimeParseException ex) {
                     Mensagem.setText("Erro: a data não está no formato correto (dd/MM/yyyy)");
+                    return;
                 }
-                for(Atendimento b : atendimentos){
-                    if(b.getCod()==cod){
-                        Mensagem.setText("Erro: código já cadastrado");
-                    }
-                }
+
                 atendimentos.add(new Atendimento(cod, dataString, duracao, "PENDENTE", null, eventoCadastro));
+                Mensagem.setText("Atendimento Cadastrado com sucesso!");
                 code.setText("");
                 cancelaAtendimento();
             }
