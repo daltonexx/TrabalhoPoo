@@ -11,9 +11,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.border.Border;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 
 public class ACMERescue extends JFrame implements ActionListener {
@@ -25,6 +27,7 @@ public class ACMERescue extends JFrame implements ActionListener {
     private AppEquipe appEquipe;
     private AppEquipamento appEquipamento;
     private CadastraAtendimento cadastraAtendimento;
+    private VincularEquipamento vincularEquipamento;
     private ArrayList<Evento> eventos;
     private ArrayList<Equipe> equipes;
     private ArrayList<Atendimento> atendimentos;
@@ -58,6 +61,7 @@ public class ACMERescue extends JFrame implements ActionListener {
 
         titulo = new JLabel("Menu de atendimento ACMERescue");
 
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel painel = new JPanel();
         BoxLayout layout = new BoxLayout(painel, BoxLayout.Y_AXIS);
@@ -639,6 +643,10 @@ public class ACMERescue extends JFrame implements ActionListener {
     }
     private void iniciarAppEquipe(){
         appEquipe = new AppEquipe(equipes);
+    }
+
+    private void abreVincularEquipamento(){
+        vincularEquipamento = new VincularEquipamento(equipamentos,equipes);
     }
 
 
@@ -1373,6 +1381,9 @@ public class ACMERescue extends JFrame implements ActionListener {
         }else if (e.getSource() == cAtendimento){
             abreCadastroAtendimento();
             this.setVisible(false);
+        }else if (e.getSource() == vEquipamento){
+            abreVincularEquipamento();
+            this.setVisible(false);
         }
 
 
@@ -1391,7 +1402,150 @@ public class ACMERescue extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
+    private class VincularEquipamento extends JFrame implements ActionListener{
+        private JPanel container;
+        private JList listEquipamentos, listEquipes;
+        private JScrollPane scrollEquipamentos, scrollEquipes;
+        private JTextArea console;
+        private JButton vincular, finalizar, limparConsole;
 
+        VincularEquipamento(ArrayList<Equipamento> equipamentos, ArrayList<Equipe> equipes){
+            super();
+            if(!equipamentos.isEmpty() && !equipes.isEmpty()){
+
+                //JLists
+                DefaultListModel<String> stringEquipamentos = new DefaultListModel<String>();
+                DefaultListModel<String> stringEquipes = new DefaultListModel<String>();
+                for(Equipamento equipamento : equipamentos){
+                    stringEquipamentos.addElement(equipamento.getNome());
+                }
+                for(Equipe equipe : equipes){
+                    stringEquipes.addElement(equipe.getCodinome());
+                }
+                listEquipes = new JList<String>(stringEquipes);
+                listEquipamentos = new JList<String>(stringEquipamentos);
+
+                //LAYOUTS
+                BorderLayout borderLayout = new BorderLayout();
+                FlowLayout flowLayout = new FlowLayout();
+
+                //Container
+                container = new JPanel();
+                container.setLayout(borderLayout);
+                this.add(container);
+
+                //Border Layout West
+                scrollEquipamentos = new JScrollPane(listEquipamentos);
+                scrollEquipamentos.setMinimumSize(new Dimension(200,200));
+                scrollEquipamentos.setPreferredSize(new Dimension(300,200));
+                container.add(scrollEquipamentos, BorderLayout.WEST);
+
+                //Border Layout East
+                scrollEquipes = new JScrollPane(listEquipes);
+                scrollEquipes.setMinimumSize(new Dimension(200,200));
+                scrollEquipes.setPreferredSize(new Dimension(300,200));
+                container.add(scrollEquipes, BorderLayout.EAST);
+
+                //Border Layout Center
+                console = new JTextArea();
+                console.setEditable(false);
+                console.setFocusable(false);
+                container.add(console, BorderLayout.CENTER);
+
+                //Border Layout South
+                JPanel borderSouth = new JPanel();
+                borderSouth.setLayout(flowLayout);
+                vincular = new JButton("Vincular");
+                limparConsole = new JButton("Limpar");
+                finalizar = new JButton("Voltar");
+                borderSouth.add(vincular);
+                borderSouth.add(limparConsole);
+                borderSouth.add(finalizar);
+                container.add(borderSouth, BorderLayout.SOUTH);
+
+
+                //VISIVEL/PACK
+                this.setVisible(true);
+                this.setSize(1000,800);
+                this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+                //DEBBUG
+                listEquipamentos.setSelectedIndex(0);
+                listEquipes.setSelectedIndex(0);
+
+                vincular.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(e.getSource() == vincular){
+                            Equipe equipe = equipes.get(listEquipes.getSelectedIndex());
+                            Equipamento equipamento = equipamentos.get(listEquipamentos.getSelectedIndex());
+                            if(equipamento.getEquipe() == null){
+                                equipamento.setEquipe(equipe);
+                                equipe.addEquipamento(equipamento);
+                            }
+                            else{
+                                console.append("ERRO, EQUIPAMENTO JA VINCULADO A OUTRA EQUIPE!\n");
+                            }
+                        }
+                    }
+                });
+
+                limparConsole.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(e.getSource() == limparConsole){
+                            console.setText("");
+                            listEquipamentos.setSelectedIndex(0);
+                            listEquipes.setSelectedIndex(0);
+                        }
+                    }
+                });
+
+                finalizar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(e.getSource() == finalizar){
+                            menuVisivel();
+                            dispose();
+                        }
+                    }
+                });
+            }
+            else {
+                container = new JPanel();
+                finalizar = new JButton("Voltar");
+                console = new JTextArea();
+                container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+                container.add(console);
+                container.add(Box.createVerticalStrut(10));
+                container.add(finalizar);
+                console.setEditable(false);
+                console.setFocusable(false);
+                console.setText("ERRO, EQUIPAMENTO OU EQUIPE NÃO FORAM CADASTRADAS AINDA. \n " +
+                        "PARA TER ACESSO AO VINCULAR EQUIPAMENTOS, POR FAVOR, \n " +
+                        "ADICIONE PELO MENOS 1 EQUIPE E " +
+                        "1 EQUIPAMENTO");
+                this.add(container);
+                finalizar.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(e.getSource() == finalizar){
+                            menuVisivel();
+                            dispose();
+                        }
+                    }
+                });
+
+                this.setVisible(true);
+                this.pack();
+                this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+            }
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+        }
+    }
 
 }
 

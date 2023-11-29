@@ -17,6 +17,7 @@ public class Equipe implements Comparable<Equipe> {
 		this.quantidade = quantidade;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		equipamentos = new ArrayList<Equipamento>();
 	}
 
 
@@ -35,6 +36,10 @@ public class Equipe implements Comparable<Equipe> {
 
 	public double getLongitude() {
 		return longitude;
+	}
+
+	public void addEquipamento(Equipamento equipamento){
+		equipamentos.add(equipamento);
 	}
 
 	public double getSomatorioEquipamento(){

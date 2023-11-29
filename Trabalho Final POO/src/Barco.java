@@ -10,4 +10,14 @@ public class Barco extends Equipamento {
 		super(id, nome, custoDia);
 		this.capacidade = capacidade;
 	}
+
+	@Override
+	public String toString() {
+		return "Barco = {" +
+				"id=" + getId() +
+				", nome='" + getNome() + '\'' +
+				", custoDia=" + getCustoDia() +
+				", capacidade=" + capacidade +
+				'}';
+	}
 }
