@@ -41,6 +41,7 @@ public class ACMERescue extends JFrame implements ActionListener {
         eventos = new ArrayList<>();
         equipamentos = new ArrayList<>();
         equipes = new ArrayList<>();
+        atendimentos = new ArrayList<>();
 
         /** leitura de arquivo
          * try {
@@ -139,21 +140,23 @@ public class ACMERescue extends JFrame implements ActionListener {
     public class CadastraAtendimento extends JFrame implements ActionListener{
         private JTextArea campoEvento;
         private JFrame janelaAtendimento;
-        private JPanel painelAtendimento, tituloCodigo, linhaCodePanel;
-        private JLabel tituloevento;
-        private JButton confirmaCodigo, finalizar;
+        private JPanel painelAtendimento, tituloCodigo, linhaCodePanel, botoesBaixo;
+        private JLabel tituloevento, mensagemErro;
+        private JButton confirmaCodigo, finalizar, cancelar, confirmaCadastro;
         private JTextField code;
+        private JPanel linhacod, linhadata, linhaduracao, linhaok;
 
 
         public CadastraAtendimento() {
-            campoEvento = new JTextArea(10, 20);
+            campoEvento = new JTextArea(5, 20);
             StringBuilder eventosStr = new StringBuilder("Eventos Cadastrados:\n");
             for (Evento evento : eventos) {
                 eventosStr.append(evento.toString()).append("\n");
             }
             campoEvento.setBackground(Color.white);
-            campoEvento.setSize(30, 80);
+            campoEvento.setSize(20, 10);
             campoEvento.setText(eventosStr.toString());
+            campoEvento.setEditable(false);
 
 
             tituloevento = new JLabel("Insira o código do evento que você deseja cadastrar o atendimento");
@@ -169,54 +172,115 @@ public class ACMERescue extends JFrame implements ActionListener {
             tituloCodigo = new JPanel(new FlowLayout());
             tituloCodigo.add(tituloevento);
 
-            code = new JTextField(20);
+            code = new JTextField(10);
             confirmaCodigo = new JButton("Confirmar código");
 
+            mensagemErro = new JLabel("");
             linhaCodePanel = new JPanel();
             linhaCodePanel.setLayout(new FlowLayout());
             linhaCodePanel.add(code);
+            linhaCodePanel.add(mensagemErro);
             confirmaCodigo.addActionListener(this);
+
+            botoesBaixo = new JPanel(new FlowLayout());
 
             finalizar = new JButton("Finalizar");
             finalizar.addActionListener(this);
-
+            cancelar = new JButton("Cancelar");
+            cancelar.addActionListener(this);
+            botoesBaixo.add(finalizar);
+            botoesBaixo.add(cancelar);
 
             painelAtendimento.add(campoEvento);
             painelAtendimento.add(tituloevento);
             painelAtendimento.add(linhaCodePanel);
             painelAtendimento.add(confirmaCodigo);
-            painelAtendimento.add(finalizar);
+
+            linhacod = new JPanel();
+            linhacod.setLayout(new FlowLayout());
+            linhacod.add(new JLabel("Insira o Código do Atendimento"));
+            linhacod.add(new JTextField(10));
+            linhacod.setForeground(Color.WHITE);
+            linhacod.setVisible(false);
+            painelAtendimento.add(linhacod);
+
+            linhadata = new JPanel();
+            linhadata.setLayout(new FlowLayout());
+            linhadata.add(new JLabel("Insira a data de início"));
+            linhadata.add(new JTextField("dd/mm/aaaa", 10));
+            linhadata.setForeground(Color.WHITE);
+            linhadata.setVisible(false);
+            painelAtendimento.add(linhadata);
+
+            linhaduracao = new JPanel();
+            linhaduracao.setLayout(new FlowLayout());
+            linhaduracao.add(new JLabel("Insira a duração em dias"));
+            linhaduracao.add(new JTextField(3));
+            linhaduracao.setForeground(Color.WHITE);
+            linhaduracao.setVisible(false);
+            painelAtendimento.add(linhaduracao);
+
+            linhaok = new JPanel();
+            confirmaCadastro = new JButton("Confirmar Cadastro");
+            linhaok.setLayout(new FlowLayout());
+            linhaok.add(confirmaCadastro);
+            linhaok.setVisible(false);
+            painelAtendimento.add(linhaok);
+
+            confirmaCadastro.addActionListener(this);
+
+            painelAtendimento.add(botoesBaixo);
 
             janelaAtendimento.getContentPane().add(painelAtendimento);
             janelaAtendimento.setVisible(true);
 
+
+
+
         }
 
         public void mostraAtendimento(){
-            
+            linhacod.setVisible(true);
+            linhadata.setVisible(true);
+            linhaduracao.setVisible(true);
+            confirmaCadastro.setVisible(true);
         }
+
+        public void cancelaAtendimento(){
+            linhacod.setVisible(false);
+            linhadata.setVisible(false);
+            linhaduracao.setVisible(false);
+        }
+
 
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            if(e.getSource()==finalizar){
+            if (e.getSource() == finalizar) {
                 janelaAtendimento.dispose();
                 menuVisivel();
-
-            } else if(e.getSource() == confirmaCodigo){
-                for(Evento x: eventos){
-                    if(x.getCodigo().equals(code.getText())){
-                        for(Atendimento a: atendimentos){
-                            if(a.getEvento().equals(x)){
-                                code.setText("ERRO: Evento já está cadastrado em um atendimento");
+            } else if (e.getSource() == cancelar) {
+                cancelaAtendimento();
+                confirmaCadastro.setVisible(false);
+            }
+            else if (e.getSource() == confirmaCodigo) {
+                boolean eventoEncontrado = false;
+                for (Evento x : eventos) {
+                    if (x.getCodigo().equals(code.getText())) {
+                        eventoEncontrado = true;
+                        for (Atendimento a : atendimentos) {
+                            if (a.getEvento().equals(x)) {
+                                mensagemErro.setText("ERRO: Evento já está cadastrado em um atendimento");
+                                return;
                             }
-
                         }
-                        mostraAtendimento();;
-                    } else{
-                        code.setText("ERRO: Não há nenhum evento com esse código");
+                        mensagemErro.setText("");
+                        mostraAtendimento();
+                        break;
                     }
+                }
+                if (!eventoEncontrado) {
+                    mensagemErro.setText("ERRO: Não há nenhum evento com esse código");
                 }
             }
         }
