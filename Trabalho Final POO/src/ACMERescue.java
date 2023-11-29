@@ -2352,11 +2352,12 @@ public class ACMERescue extends JFrame implements ActionListener {
             borderSouth.setLayout(flowLayout);
             container.add(borderSouth, BorderLayout.SOUTH);
             confirmaNome = new JButton("OK");
-            voltar = new JButton("Voltar");
+            voltar = new JButton("Ir para Menu");
             limpaTerminal = new JButton("Limpar");
             borderSouth.add(confirmaNome);
             borderSouth.add(voltar);
             borderSouth.add(limpaTerminal);
+            this.setTitle("Cadastro de dados iniciais");
 
             confirmaNome.addActionListener(new ActionListener() {
                 @Override
