@@ -1,2 +1,3 @@
-package PACKAGE_NAME;public interface JSONConvertable {
+public interface JSONConvertable {
+    String toJSONObject();
 }

@@ -1,4 +1,4 @@
-public class Escavadeira extends Equipamento {
+public class Escavadeira extends Equipamento implements CSVConvertable {
 
 	private Combustivel combustivel;
 
@@ -19,5 +19,15 @@ public class Escavadeira extends Equipamento {
 	@Override
 	public String toString() {
 		return "Escavadeira: " + super.toString() + ", combustivel=" + combustivel.getCombustivel() + ", carga=" + carga;
+	}
+
+	@Override
+	public String toCSV() {
+		return super.toCSV()+";3;"+combustivel.toString().toUpperCase()+";"+carga;
+	}
+
+	@Override
+	public String toJSONObject() {
+		return super.toJSONObject()+ String.format( "\"tipo\": \"3\", \"combsutivel\": \"%s\", \"carga\": %f}",combustivel.toString(),carga);
 	}
 }

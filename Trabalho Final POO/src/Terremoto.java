@@ -15,4 +15,14 @@ public class Terremoto extends Evento {
 	public String toString() {
 		return "Terremoto: " + super.toString() + ", Magnitude= " + magnitude;
 	}
+
+	@Override
+	public String toCSV() {
+		return super.toCSV()+";2;"+magnitude;
+	}
+
+	@Override
+	public String toJSONObject() {
+		return super.toJSONObject()+ String.format( "\"tipo\": \"2\", \"magnitude\": %f}",magnitude);
+	}
 }

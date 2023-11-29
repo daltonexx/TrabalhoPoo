@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Equipe implements Comparable<Equipe> {
+public class Equipe implements Comparable<Equipe>, CSVConvertable, JSONConvertable {
 
 	private String codinome;
 
@@ -65,5 +65,21 @@ public class Equipe implements Comparable<Equipe> {
 	@Override
 	public int compareTo(Equipe o) {
 		return this.codinome.compareTo(o.codinome);
+	}
+
+	@Override
+	public String toCSVHeader() {
+		return "codinome;quantidade;latitude;longitude";
+	}
+
+	@Override
+	public String toCSV() {
+		return codinome+";"+quantidade+";"+latitude+";"+longitude;
+	}
+
+	@Override
+	public String toJSONObject() {
+		return String.format("{\"codinome\": \"%s\", \"quantidade\": %d, \"latitude\": %f, \"longitude\": %f}",
+				getCodinome(), getQuantidade(), getLatitude(), getLongitude());
 	}
 }

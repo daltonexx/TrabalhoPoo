@@ -1,4 +1,4 @@
-public class Barco extends Equipamento {
+public class Barco extends Equipamento{
 
 	private int capacidade;
 
@@ -19,5 +19,15 @@ public class Barco extends Equipamento {
 	@Override
 	public String toString() {
 		return "Barco: " + super.toString() + ", capacidade=" + capacidade;
+	}
+
+	@Override
+	public String toCSV() {
+		return super.toCSV()+";1;"+capacidade;
+	}
+
+	@Override
+	public String toJSONObject() {
+		return super.toJSONObject()+ String.format( "\"tipo\": \"1\",\"capacidade\": %d}",capacidade);
 	}
 }

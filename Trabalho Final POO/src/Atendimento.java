@@ -1,4 +1,4 @@
-public class Atendimento {
+public class Atendimento implements CSVConvertable, JSONConvertable {
 
 	private int cod;
 	private String dataInicio;
@@ -111,4 +111,20 @@ public class Atendimento {
 
 			return distancia;
 		}
+
+	@Override
+	public String toCSV() {
+		return cod+";"+dataInicio+";"+duracao+";"+status+";"+evento.getCodigo();
+	}
+
+	@Override
+	public String toCSVHeader() {
+		return "cod;dataInicio;duracao;status;codigo";
+	}
+
+	@Override
+	public String toJSONObject() {
+		return String.format("{\"cod\": \"%s\", \"dataInicio\": \"%s\", \"duracao\": %d, \"status\": \"%s\", \"codigo\": \"%s\"}",
+				cod,dataInicio,duracao,status,evento.getCodigo());
+	}
 }

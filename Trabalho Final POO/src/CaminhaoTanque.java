@@ -1,4 +1,4 @@
-public class CaminhaoTanque extends Equipamento {
+public class CaminhaoTanque extends Equipamento{
 
 	private double capacidade;
 
@@ -19,5 +19,15 @@ public class CaminhaoTanque extends Equipamento {
 	public CaminhaoTanque(int id, String nome, double custoDia, Equipe equipe, double capacidade) {
 		super(id, nome, custoDia, equipe);
 		this.capacidade = capacidade;
+	}
+
+	@Override
+	public String toCSV() {
+		return super.toCSV()+";2;"+capacidade;
+	}
+
+	@Override
+	public String toJSONObject() {
+		return super.toJSONObject()+ String.format( "\"tipo\": \"2\", \"capacidade\": %f}",capacidade);
 	}
 }

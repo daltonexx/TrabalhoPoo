@@ -23,4 +23,14 @@ public class Ciclone extends Evento {
 		return "Ciclone: " + super.toString() + ", velocidade= " + velocidade +
 				", precipitacao= " + precipitacao;
 	}
+
+	@Override
+	public String toCSV() {
+		return super.toCSV()+";1;"+velocidade+";"+precipitacao;
+	}
+
+	@Override
+	public String toJSONObject() {
+		return super.toJSONObject()+ String.format( "\"tipo\": \"1\", \"velocidade\": %f, \"precipitacao\": %f}",velocidade,precipitacao);
+	}
 }

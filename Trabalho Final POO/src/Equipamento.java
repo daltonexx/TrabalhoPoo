@@ -1,4 +1,4 @@
-public class Equipamento implements Comparable<Equipamento>{
+public class Equipamento implements Comparable<Equipamento>, CSVConvertable, JSONConvertable{
 
 	private int id;
 
@@ -52,5 +52,20 @@ public class Equipamento implements Comparable<Equipamento>{
 	@Override
 	public int compareTo(Equipamento equipamento) {
 		return Integer.compare(this.id, equipamento.id);
+	}
+
+	@Override
+	public String toCSV() {
+		return id+";"+nome+";"+custoDia+";"+equipe.getCodinome();
+	}
+
+	@Override
+	public String toCSVHeader() {
+		return "identificador;nome;custoDiario;codinome;tipo;capacidade_combustivel;carga";
+	}
+
+	@Override
+	public String toJSONObject() {
+		return String.format("{\"id\": %d, \"nome\": \"%s\", \"custoDiario\": %f, \"codinome\": \"%s\", ",id,nome,custoDia,equipe.getCodinome());
 	}
 }
