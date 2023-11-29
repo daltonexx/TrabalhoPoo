@@ -44,7 +44,7 @@ public class Equipamento implements Comparable<Equipamento>{
 
 	@Override
 	public String toString() {
-		return "Equipamento" + "id=" + id + ", nome='" + nome + ", custoDia=" + custoDia + ", equipe=" + equipe;
+		return "Equipamento id=" + id + ", Nome='" + nome + ", CustoDia=" + custoDia + ", Equipe=" + equipe;
 	}
 
 	@Override

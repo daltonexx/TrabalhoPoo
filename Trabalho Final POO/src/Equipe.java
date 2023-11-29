@@ -59,10 +59,7 @@ public class Equipe implements Comparable<Equipe> {
 	}
 
 	public String toString(){
-		String s;
-		s = getCodinome() + ";" + getQuantidade() + ";" + getLatitude() + ";" +
-				getLongitude() + "\n";
-		return s;
+		return "Codinome = " + codinome + "; Quantidade = " + quantidade + "; Latitude = " + latitude + "; Longitude" + longitude;
 	}
 
 	@Override
