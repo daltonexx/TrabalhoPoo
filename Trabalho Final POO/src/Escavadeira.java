@@ -10,6 +10,12 @@ public class Escavadeira extends Equipamento {
 		this.carga = carga;
 	}
 
+	public Escavadeira(int id, String nome, double custoDia, Equipe equipe, Combustivel combustivel, double carga) {
+		super(id, nome, custoDia, equipe);
+		this.combustivel = combustivel;
+		this.carga = carga;
+	}
+
 	@Override
 	public String toString() {
 		return "Escavadeira = {" +

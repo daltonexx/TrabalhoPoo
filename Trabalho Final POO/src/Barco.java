@@ -11,6 +11,11 @@ public class Barco extends Equipamento {
 		this.capacidade = capacidade;
 	}
 
+	public Barco(int id, String nome, double custoDia, Equipe equipe, int capacidade) {
+		super(id, nome, custoDia, equipe);
+		this.capacidade = capacidade;
+	}
+
 	@Override
 	public String toString() {
 		return "Barco = {" +

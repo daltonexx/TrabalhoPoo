@@ -20,4 +20,9 @@ public class CaminhaoTanque extends Equipamento {
 				", capacidade=" + capacidade +
 				'}';
 	}
+
+	public CaminhaoTanque(int id, String nome, double custoDia, Equipe equipe, double capacidade) {
+		super(id, nome, custoDia, equipe);
+		this.capacidade = capacidade;
+	}
 }

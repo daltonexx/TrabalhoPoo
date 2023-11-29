@@ -34,6 +34,14 @@ public class Equipamento implements Comparable<Equipamento>{
 		this.custoDia = custoDia;
 		this.equipe = null;
 	}
+
+	public Equipamento(int id, String nome, double custoDia, Equipe equipe) {
+		this.id = id;
+		this.nome = nome;
+		this.custoDia = custoDia;
+		this.equipe = equipe;
+	}
+
 	@Override
 	public int compareTo(Equipamento equipamento) {
 		return Integer.compare(this.id, equipamento.id);

@@ -1,8 +1,8 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
@@ -1544,6 +1544,222 @@ public class ACMERescue extends JFrame implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
 
+        }
+        public class carregaArquivos extends JFrame implements ActionListener{
+            private JTextField nomeArquivo;
+            private JButton confirmaNome;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == confirmaNome){
+
+                }
+            }
+            private void cadastraEquipe(String nome){
+                cadastra(nome + "-EQUIPES.csv");
+                String linha = entrada.nextLine();
+                while(linha != null){
+                    boolean certo = true;
+                    int quantidade = 0;
+                    double latitude = 0.0;
+                    double longitude = 0.0;
+                    String[] equipeAtributos = linha.split(";");
+                    String codinome = equipeAtributos[0];
+                    String strQuantidade = equipeAtributos[1];
+                    try{
+                        quantidade = Integer.parseInt(strQuantidade);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    String strLatitude = equipeAtributos[2];
+                    try{
+                        latitude = Double.parseDouble(strLatitude);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    String strLongitude = equipeAtributos[3];
+                    try{
+                        longitude = Double.parseDouble(strLongitude);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    if(certo){
+                        Equipe equipe = new Equipe(codinome,quantidade,latitude,longitude);
+                        equipes.add(equipe);
+                        System.out.println(equipe);
+                    }
+                    linha = entrada.nextLine();
+                }
+            }
+
+            private void cadastraEquipamentos(String nome, ArrayList<Equipe> equipes){
+                cadastra(nome + "-EQUIPAMENTOS.CSV");
+                String linha = entrada.nextLine();
+                while(linha != null){
+                    boolean certo = true;
+                    String[] equipamentoAtributos = linha.split(";");
+                    int id = 0;
+                    double custoDiario = 0.0;
+                    int tipo = 0;
+                    Combustivel combustivel = null;
+                    int capacidadeBarco = 0;
+                    double capacidadeTanque = 0.0;
+                    double carga = 0.0;
+                    Equipe equipe = null;
+                    String strId = equipamentoAtributos[0];
+                    try{
+                        id = Integer.parseInt(strId);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    String nomeEquip = equipamentoAtributos[1];
+                    String strCusto = equipamentoAtributos[2];
+                    try{
+                        custoDiario = Double.parseDouble(strCusto);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    String codinome = equipamentoAtributos[3];
+                    for(Equipe equi : equipes){
+                       if(equi.getCodinome().equals(codinome)){
+                           equipe = equi;
+                       }
+                    }
+                    String strTipo = equipamentoAtributos[4];
+                    tipo = Integer.parseInt(strTipo);
+                    if(tipo == 1){
+                        String strCapBarco = equipamentoAtributos[5];
+                        try{
+                            capacidadeBarco = Integer.parseInt(strCapBarco);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        if(certo){
+                            Barco barco = new Barco(id,nome,custoDiario,equipe,capacidadeBarco);
+                            equipamentos.add(barco);
+                            System.out.println(barco);
+                        }
+                    } else if (tipo == 2) {
+                        String strCapTanque = equipamentoAtributos[5];
+                        try{
+                            capacidadeTanque = Double.parseDouble(strCapTanque);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        if(certo){
+                            CaminhaoTanque tanque = new CaminhaoTanque(id,nome,custoDiario,equipe,capacidadeTanque);
+                        }
+                    } else if (tipo == 3) {
+                        String strCombustivel = equipamentoAtributos[5];
+                        try{
+                            for(Combustivel c : Combustivel.values()){
+                                if(c.getCombustivel().toUpperCase().equals(strCombustivel)){
+                                    combustivel = c;
+                                }
+                            }
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        String strCarga = equipamentoAtributos[6];
+                        try {
+                            carga = Double.parseDouble(strCarga);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        if(certo){
+                            Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
+                            equipamentos.add(escavadeira);
+                            System.out.println();
+                        }
+                    }
+                    linha = entrada.nextLine();
+                }
+            }
+
+            private void cadastraEventos(String nome){
+                cadastra(nome + "-EVENTOS.CSV");
+                String linha = entrada.nextLine();
+                while (linha != null){
+                    String[] atributosEvento = linha.split(";");
+                    boolean certo = true;
+                    double latitude = 0.0;
+                    double longitude = 0.0;
+                    int tipo = 0;
+                    double velocidade = 0.0;
+                    double precipitacao = 0.0;
+                    double magnitude = 0.0;
+                    int estiagem = 0;
+                    String codigo = atributosEvento[0];
+                    String data = atributosEvento[1];
+                    String strLatitude = atributosEvento[2];
+                    try{
+                        latitude = Integer.parseInt(strLatitude);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    String strLongitude = atributosEvento[3];
+                    try{
+                        longitude = Integer.parseInt(strLongitude);
+                    }catch (Exception e){
+                        certo = false;
+                    }
+                    String strTipo = atributosEvento[4];
+                    if(strTipo.equals("1")){
+                        String strVelocidade = atributosEvento[5];
+                        try {
+                            velocidade = Double.parseDouble(strVelocidade);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        String strPrecipitacao = atributosEvento[6];
+                        try{
+                            precipitacao = Double.parseDouble(strPrecipitacao);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        if(certo){
+                            Ciclone ciclone = new Ciclone(codigo,data,latitude,longitude,velocidade,precipitacao);
+                            eventos.add(ciclone);
+                            System.out.println(ciclone);
+                        }
+                    }
+                    else if(strTipo.equals("2")){
+                        String strMagnitude = atributosEvento[5];
+                        try{
+                            magnitude = Double.parseDouble(strMagnitude);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        if(certo){
+                            Terremoto terremoto = new Terremoto(codigo,data,latitude,longitude,magnitude);
+                            eventos.add(terremoto);
+                            System.out.println(terremoto);
+                        }
+                    }
+                    else if(strTipo.equals("3")){
+                        String strEstiagem = atributosEvento[5];
+                        try{
+                            estiagem = Integer.parseInt(strEstiagem);
+                        }catch (Exception e){
+                            certo = false;
+                        }
+                        if(certo){
+                            Seca seca = new Seca(codigo,data,latitude,longitude,estiagem);
+                        }
+                    }
+                    linha = entrada.nextLine();
+                }
+            }
+
+            private void cadastra(String path){
+                try {
+                    BufferedReader streamEntrada = new BufferedReader(new FileReader(path));
+                    entrada = new Scanner(streamEntrada);   // Usa como entrada um arquivo
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+                Locale.setDefault(Locale.ENGLISH);   // Ajusta para ponto decimal
+                entrada.useLocale(Locale.ENGLISH);
+            }
         }
     }
 
