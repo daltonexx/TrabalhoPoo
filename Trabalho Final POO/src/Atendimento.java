@@ -71,4 +71,15 @@ public class Atendimento {
 		return eq + eqp + desl;
 	}
 
+	@Override
+	public String toString() {
+		return "Atendimento: " +
+				"cod=" + cod +
+				", dataInicio='" + dataInicio + '\'' +
+				", duracao=" + duracao +
+				", status='" + status + '\'' +
+				", equipe=" + equipe +
+				", evento=" + evento.getCodigo() +
+				'}';
+	}
 }
