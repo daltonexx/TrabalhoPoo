@@ -20,10 +20,19 @@ public class Equipamento implements Comparable<Equipamento>{
 		return custoDia;
 	}
 
+	public Equipe getEquipe() {
+		return equipe;
+	}
+
+	public void setEquipe(Equipe equipe){
+		this.equipe = equipe;
+	}
+
 	public Equipamento(int id, String nome, double custoDia) {
 		this.id = id;
 		this.nome = nome;
 		this.custoDia = custoDia;
+		this.equipe = null;
 	}
 	@Override
 	public int compareTo(Equipamento equipamento) {
