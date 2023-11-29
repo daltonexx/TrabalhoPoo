@@ -27,6 +27,7 @@ public class ACMERescue extends JFrame implements ActionListener {
     private VincularEquipamento vincularEquipamento;
     private CarregaArquivos carregaArquivos;
     private CarregaArquivosInicial carregaArquivosInicial;
+    private SalvaArquivos salvaArquivos;
     private ArrayList<Evento> eventos;
     private ArrayList<Equipe> equipes;
     private Queue<Atendimento> atendimentos;
@@ -787,6 +788,10 @@ public class ACMERescue extends JFrame implements ActionListener {
         carregaArquivosInicial = new CarregaArquivosInicial();
     }
 
+    private void abreSalvaArquivos(){
+        salvaArquivos = new SalvaArquivos();
+    }
+
 
     //metodo pra fazer acmeRescue se tornar executavel (pra testar)
     public static void main(String[] args) {
@@ -1522,9 +1527,11 @@ public class ACMERescue extends JFrame implements ActionListener {
         }else if (e.getSource() == carregaDados){
             abreCarregaArquivos();
             this.setVisible(false);
-        }else if(e.getSource() == consultaAtendimento) {
+        }else if(e.getSource() == salvaDados){
+            abreSalvaArquivos();
+            this.setVisible(false);
+        } else if(e.getSource() == consultaAtendimento) {
             consultaTodosAtendimentos();
-
         }else if(e.getSource() == aAtendimento){
             alocarAtendimentosAutomaticamente();
         }else if(e.getSource() == mRelatorio){
@@ -2748,6 +2755,72 @@ public class ACMERescue extends JFrame implements ActionListener {
             }
             Locale.setDefault(Locale.ENGLISH);   // Ajusta para ponto decimal
             entrada.useLocale(Locale.ENGLISH);
+        }
+    }
+
+    private class SalvaArquivos extends JFrame implements ActionListener{
+        private JPanel container;
+        private JButton csv,xml,json,voltar;
+        private JTextField nomeArquivo;
+        private JLabel labelNome, titulo;
+        private JTextArea console;
+        private JScrollPane scrollConsole;
+        SalvaArquivos(){
+            //LAYOUT
+            BorderLayout borderLayout = new BorderLayout();
+            FlowLayout flowLayout = new FlowLayout();
+
+            //CONTAINER
+            container = new JPanel();
+            this.add(container);
+            container.setLayout(borderLayout);
+
+            //BORDER NORTH 0
+            JPanel containerNorth0 = new JPanel();
+            containerNorth0.setLayout(new BoxLayout(containerNorth0, BoxLayout.Y_AXIS));
+            voltar = new JButton("Voltar");
+            containerNorth0.add(voltar);
+            titulo = new JLabel();
+            containerNorth0.add(titulo);
+
+            //BORDER NORTH 1
+            JPanel containerNorth1 = new JPanel();
+            containerNorth1.setLayout(new BoxLayout(containerNorth1, BoxLayout.Y_AXIS));
+            labelNome = new JLabel("Nome do Arquivo: ");
+            containerNorth1.add(labelNome);
+            nomeArquivo = new JTextField(20);
+            containerNorth1.add(nomeArquivo);
+
+            //BORDER NORTH
+            JPanel containerNorth = new JPanel();
+            containerNorth.add(containerNorth0);
+            containerNorth.add(containerNorth1);
+            container.add(containerNorth, BorderLayout.NORTH);
+
+            //BORDER CENTER
+            console = new JTextArea();
+            scrollConsole = new JScrollPane(console);
+            container.add(scrollConsole,BorderLayout.CENTER);
+
+            //BORDER SOUTH
+            JPanel containerSouth = new JPanel();
+            containerSouth.setLayout(flowLayout);
+            csv = new JButton("CSV");
+            json = new JButton("JSON");
+            xml = new JButton("XML");
+            containerSouth.add(csv);
+            containerSouth.add(json);
+            containerSouth.add(xml);
+            container.add(containerSouth, BorderLayout.SOUTH);
+
+            //SET VISIBLE
+            this.setVisible(true);
+            this.setSize(1000,800);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
         }
     }
 }
