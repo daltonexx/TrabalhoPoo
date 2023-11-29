@@ -18,11 +18,6 @@ public class Barco extends Equipamento {
 
 	@Override
 	public String toString() {
-		return "Barco = {" +
-				"id=" + getId() +
-				", nome='" + getNome() + '\'' +
-				", custoDia=" + getCustoDia() +
-				", capacidade=" + capacidade +
-				'}';
+		return super.toString() + ", capacidade=" + capacidade;
 	}
 }

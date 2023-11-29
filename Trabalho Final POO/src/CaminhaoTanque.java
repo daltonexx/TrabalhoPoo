@@ -13,12 +13,7 @@ public class CaminhaoTanque extends Equipamento {
 
 	@Override
 	public String toString() {
-		return "CaminhaoTanque = {" +
-				"id=" + getId() +
-				", nome='" + getNome() + '\'' +
-				", custoDia=" + getCustoDia() +
-				", capacidade=" + capacidade +
-				'}';
+		return super.toString() + ", capacidade=" + capacidade;
 	}
 
 	public CaminhaoTanque(int id, String nome, double custoDia, Equipe equipe, double capacidade) {

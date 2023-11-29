@@ -43,6 +43,11 @@ public class Equipamento implements Comparable<Equipamento>{
 	}
 
 	@Override
+	public String toString() {
+		return "Equipamento" + "id=" + id + ", nome='" + nome + ", custoDia=" + custoDia + ", equipe=" + equipe;
+	}
+
+	@Override
 	public int compareTo(Equipamento equipamento) {
 		return Integer.compare(this.id, equipamento.id);
 	}

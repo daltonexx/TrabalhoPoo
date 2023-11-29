@@ -18,12 +18,6 @@ public class Escavadeira extends Equipamento {
 
 	@Override
 	public String toString() {
-		return "Escavadeira = {" +
-				"id=" + getId() +
-				", nome='" + getNome() + '\'' +
-				", custoDia=" + getCustoDia() +
-				", combustivel=" + combustivel.getCombustivel() +
-				", carga=" + carga +
-				'}';
+		return super.toString() + ", combustivel=" + combustivel.getCombustivel() + ", carga=" + carga;
 	}
 }
