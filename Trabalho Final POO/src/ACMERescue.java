@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
+import java.time.format.DateTimeParseException;
 
 
 public class ACMERescue extends JFrame implements ActionListener {
@@ -36,10 +37,9 @@ public class ACMERescue extends JFrame implements ActionListener {
     private LocalDate data;
     private JPanel Titulo;
 
+
     public ACMERescue() {
         super();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         eventos = new ArrayList<>();
         equipamentos = new ArrayList<>();
@@ -145,10 +145,12 @@ public class ACMERescue extends JFrame implements ActionListener {
         private JTextArea campoEvento;
         private JFrame janelaAtendimento;
         private JPanel painelAtendimento, tituloCodigo, linhaCodePanel, botoesBaixo;
-        private JLabel tituloevento, mensagemErro;
-        private JButton confirmaCodigo, finalizar, cancelar, confirmaCadastro;
-        private JTextField code;
-        private JPanel linhacod, linhadata, linhaduracao, linhaok;
+        private JLabel tituloevento, mensagemErro, Mensagem;
+        private JButton confirmaCodigo, voltar, cancelar, confirmaCadastro;
+        private JTextField code, codigoAtendimento, dataAtendimento, duracaoAtendimento;
+        private JPanel linhacod, linhadata, linhaduracao;
+        private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        private Evento eventoCadastro;
 
 
         public CadastraAtendimento() {
@@ -188,12 +190,13 @@ public class ACMERescue extends JFrame implements ActionListener {
 
             botoesBaixo = new JPanel(new FlowLayout());
 
-            finalizar = new JButton("Finalizar");
-            finalizar.addActionListener(this);
+            voltar = new JButton("Voltar");
+            voltar.addActionListener(this);
             cancelar = new JButton("Cancelar");
             cancelar.addActionListener(this);
-            botoesBaixo.add(finalizar);
+            botoesBaixo.add(voltar);
             botoesBaixo.add(cancelar);
+            cancelar.setVisible(false);
 
             painelAtendimento.add(campoEvento);
             painelAtendimento.add(tituloevento);
@@ -202,37 +205,41 @@ public class ACMERescue extends JFrame implements ActionListener {
 
             linhacod = new JPanel();
             linhacod.setLayout(new FlowLayout());
+            codigoAtendimento = new JTextField(10);
             linhacod.add(new JLabel("Insira o Código do Atendimento"));
-            linhacod.add(new JTextField(10));
+            linhacod.add(codigoAtendimento);
             linhacod.setForeground(Color.WHITE);
             linhacod.setVisible(false);
             painelAtendimento.add(linhacod);
 
+
+
             linhadata = new JPanel();
             linhadata.setLayout(new FlowLayout());
+            dataAtendimento = new JTextField("dd/mm/aaaa", 10);
             linhadata.add(new JLabel("Insira a data de início"));
-            linhadata.add(new JTextField("dd/mm/aaaa", 10));
+            linhadata.add(dataAtendimento);
             linhadata.setForeground(Color.WHITE);
             linhadata.setVisible(false);
             painelAtendimento.add(linhadata);
 
             linhaduracao = new JPanel();
             linhaduracao.setLayout(new FlowLayout());
+            duracaoAtendimento = new JTextField(3);
             linhaduracao.add(new JLabel("Insira a duração em dias"));
-            linhaduracao.add(new JTextField(3));
+            linhaduracao.add(duracaoAtendimento);
             linhaduracao.setForeground(Color.WHITE);
             linhaduracao.setVisible(false);
             painelAtendimento.add(linhaduracao);
 
-            linhaok = new JPanel();
+
             confirmaCadastro = new JButton("Confirmar Cadastro");
-            linhaok.setLayout(new FlowLayout());
-            linhaok.add(confirmaCadastro);
-            linhaok.setVisible(false);
-            painelAtendimento.add(linhaok);
+            botoesBaixo.add(confirmaCadastro);
+            confirmaCadastro.setVisible(false);
 
             confirmaCadastro.addActionListener(this);
-
+            Mensagem = new JLabel("");
+            painelAtendimento.add(Mensagem);
             painelAtendimento.add(botoesBaixo);
 
             janelaAtendimento.getContentPane().add(painelAtendimento);
@@ -248,19 +255,22 @@ public class ACMERescue extends JFrame implements ActionListener {
             linhadata.setVisible(true);
             linhaduracao.setVisible(true);
             confirmaCadastro.setVisible(true);
+            cancelar.setVisible(true);
         }
 
         public void cancelaAtendimento(){
             linhacod.setVisible(false);
             linhadata.setVisible(false);
             linhaduracao.setVisible(false);
+            confirmaCadastro.setVisible(false);
+            cancelar.setVisible(false);
         }
 
 
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == finalizar) {
+            if (e.getSource() == voltar) {
                 janelaAtendimento.dispose();
                 menuVisivel();
             } else if (e.getSource() == cancelar) {
@@ -280,12 +290,45 @@ public class ACMERescue extends JFrame implements ActionListener {
                         }
                         mensagemErro.setText("");
                         mostraAtendimento();
+                        eventoCadastro = x;
                         break;
                     }
                 }
                 if (!eventoEncontrado) {
                     mensagemErro.setText("ERRO: Não há nenhum evento com esse código");
                 }
+            } else if (e.getSource() == confirmaCadastro) {
+                int cod;
+                try {
+                    cod = Integer.parseInt(codigoAtendimento.getText());
+                } catch (NumberFormatException n) {
+                    Mensagem.setText("Erro: o código tem que ser composto de números inteiro");
+                    return;
+
+                }
+                int duracao;
+                try {
+                    duracao = Integer.parseInt(duracaoAtendimento.getText());
+                } catch (NumberFormatException n) {
+                    Mensagem.setText("Erro: a duração tem que ser composto de números inteiro");
+                    return;
+
+                }
+                String dataString = dataAtendimento.getText();
+                try {
+                    LocalDate data = LocalDate.parse(dataString, formatter);
+                    Mensagem.setText("");
+                } catch (DateTimeParseException ex) {
+                    Mensagem.setText("Erro: a data não está no formato correto (dd/MM/yyyy)");
+                }
+                for(Atendimento b : atendimentos){
+                    if(b.getCod()==cod){
+                        Mensagem.setText("Erro: código já cadastrado");
+                    }
+                }
+                atendimentos.add(new Atendimento(cod, dataString, duracao, "PENDENTE", null, eventoCadastro));
+                code.setText("");
+                cancelaAtendimento();
             }
         }
     }
