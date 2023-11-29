@@ -793,17 +793,6 @@ public class ACMERescue extends JFrame implements ActionListener {
     }
 
 
-    //metodo pra fazer acmeRescue se tornar executavel (pra testar)
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ACMERescue();
-            }
-        });
-    }
-
-
     private class AppEquipe extends JFrame implements ActionListener {
         private JTextField codinome, quantidade, latitude, longitude;
         private JButton botao, fechar, limpar, crescente;
@@ -1689,7 +1678,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                             resultadoConsulta.append(" - ").append(equipamento.toString()).append("\n");
                         }
                     } else {
-                        resultadoConsulta.append("Esta equipe não possui equipamentos cadastrados.\n");
+                        resultadoConsulta.append("\nEsta equipe não possui equipamentos cadastrados.\n");
                     }
 
                     resultadoConsulta.append("Custo da Equipe: ").append(equipe.getCustoEquipe() * atendimento.getDuracao()).append("\n");
