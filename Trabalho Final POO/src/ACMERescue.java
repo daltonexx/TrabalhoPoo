@@ -1551,30 +1551,25 @@ public class ACMERescue extends JFrame implements ActionListener {
                     resultadoConsulta.append("Status: ").append(atendimento.getStatus()).append("\n");
 
                     Evento evento = atendimento.getEvento();
-                    resultadoConsulta.append("Detalhes do Evento:\n");
-                    resultadoConsulta.append("Código do Evento: ").append(evento.getCodigo()).append("\n");
-                    resultadoConsulta.append("Nome do Evento: ").append(evento.getNome()).append("\n");
-                    // Adicione mais detalhes do evento, se necessário
+                    resultadoConsulta.append("Detalhes do Evento:\n").append(atendimento.getEvento().toString());
 
                     // Se houver uma equipe alocada, mostrar informações da equipe e equipamentos
                     Equipe equipe = atendimento.getEquipe();
                     if (equipe != null) {
-                        resultadoConsulta.append("Equipe Alocada:\n");
-                        resultadoConsulta.append("Nome da Equipe: ").append(equipe.getNome()).append("\n");
+                        resultadoConsulta.append("Equipe Alocada:\n").append(equipe.toString());
 
-                        // Exibir detalhes dos equipamentos da equipe, se houver
+
                         List<Equipamento> equipamentos = equipe.getEquipamentos();
                         if (!equipamentos.isEmpty()) {
                             resultadoConsulta.append("Equipamentos da Equipe:\n");
                             for (Equipamento equipamento : equipamentos) {
-                                resultadoConsulta.append(" - ").append(equipamento.getNome()).append("\n");
-                                // Adicione mais detalhes do equipamento, se necessário
+                                resultadoConsulta.append(" - ").append(equipamento.toString()).append("\n");
                             }
                         } else {
                             resultadoConsulta.append("Esta equipe não possui equipamentos cadastrados.\n");
                         }
 
-                        resultadoConsulta.append("Custo da Equipe: ").append(equipe.getCusto()).append("\n");
+                        resultadoConsulta.append("Custo da Equipe: ").append(equipe.getCustoEquipe() * atendimento.getDuracao()).append("\n");
                     } else {
                         resultadoConsulta.append("Este atendimento não possui uma equipe alocada.\n");
                     }
@@ -1582,7 +1577,6 @@ public class ACMERescue extends JFrame implements ActionListener {
                     resultadoConsulta.append("\n-----------------\n"); // Separador entre atendimentos
                 }
 
-                // Exibir os resultados
                 JTextArea areaTexto = new JTextArea(resultadoConsulta.toString());
                 areaTexto.setEditable(false);
                 JScrollPane scrollPane = new JScrollPane(areaTexto);

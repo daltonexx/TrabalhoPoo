@@ -38,6 +38,10 @@ public class Equipe implements Comparable<Equipe> {
 		return longitude;
 	}
 
+	public ArrayList<Equipamento> getEquipamentos() {
+		return equipamentos;
+	}
+
 	public void addEquipamento(Equipamento equipamento){
 		equipamentos.add(equipamento);
 	}
@@ -48,6 +52,10 @@ public class Equipe implements Comparable<Equipe> {
 			soma += e.getCustoDia();
 		}
 		return soma;
+	}
+
+	public double getCustoEquipe(){
+		return 250 * quantidade;
 	}
 
 	public String toString(){
