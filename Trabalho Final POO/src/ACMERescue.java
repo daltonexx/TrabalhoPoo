@@ -208,7 +208,7 @@ public class ACMERescue extends JFrame implements ActionListener {
 
 
             janelaAtendimento = new JFrame("Janela de Cadastro de Atendimento");
-            janelaAtendimento.setSize(800, 600);
+            janelaAtendimento.setSize(1000, 800);
 
             painelAtendimento = new JPanel();
             painelAtendimento.setLayout(new BoxLayout(painelAtendimento, BoxLayout.Y_AXIS));
@@ -376,6 +376,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                 Mensagem.setText("Atendimento Cadastrado com sucesso!");
                 code.setText("");
                 cancelaAtendimento();
+
             }
         }
     }
@@ -1516,7 +1517,7 @@ public class ACMERescue extends JFrame implements ActionListener {
     }
 
 
-    @Override
+    @Override //action do acmeRescue
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == cEvento) {
             iniciarAppEvento();
@@ -1535,6 +1536,61 @@ public class ACMERescue extends JFrame implements ActionListener {
         }else if (e.getSource() == vEquipamento){
             abreVincularEquipamento();
             this.setVisible(false);
+        }else if(e.getSource() == consultaAtendimento) {
+            if (atendimentos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Erro: Não há atendimentos cadastrados.", "Erro", JOptionPane.ERROR_MESSAGE);
+            } else {
+
+                StringBuilder resultadoConsulta = new StringBuilder("Atendimentos Cadastrados:\n");
+
+                for (Atendimento atendimento : atendimentos) {
+
+                    resultadoConsulta.append("Código do Atendimento: ").append(atendimento.getCod()).append("\n");
+                    resultadoConsulta.append("Data de Início: ").append(atendimento.getDataInicio()).append("\n");
+                    resultadoConsulta.append("Duração em Dias: ").append(atendimento.getDuracao()).append("\n");
+                    resultadoConsulta.append("Status: ").append(atendimento.getStatus()).append("\n");
+
+                    Evento evento = atendimento.getEvento();
+                    resultadoConsulta.append("Detalhes do Evento:\n");
+                    resultadoConsulta.append("Código do Evento: ").append(evento.getCodigo()).append("\n");
+                    resultadoConsulta.append("Nome do Evento: ").append(evento.getNome()).append("\n");
+                    // Adicione mais detalhes do evento, se necessário
+
+                    // Se houver uma equipe alocada, mostrar informações da equipe e equipamentos
+                    Equipe equipe = atendimento.getEquipe();
+                    if (equipe != null) {
+                        resultadoConsulta.append("Equipe Alocada:\n");
+                        resultadoConsulta.append("Nome da Equipe: ").append(equipe.getNome()).append("\n");
+
+                        // Exibir detalhes dos equipamentos da equipe, se houver
+                        List<Equipamento> equipamentos = equipe.getEquipamentos();
+                        if (!equipamentos.isEmpty()) {
+                            resultadoConsulta.append("Equipamentos da Equipe:\n");
+                            for (Equipamento equipamento : equipamentos) {
+                                resultadoConsulta.append(" - ").append(equipamento.getNome()).append("\n");
+                                // Adicione mais detalhes do equipamento, se necessário
+                            }
+                        } else {
+                            resultadoConsulta.append("Esta equipe não possui equipamentos cadastrados.\n");
+                        }
+
+                        resultadoConsulta.append("Custo da Equipe: ").append(equipe.getCusto()).append("\n");
+                    } else {
+                        resultadoConsulta.append("Este atendimento não possui uma equipe alocada.\n");
+                    }
+
+                    resultadoConsulta.append("\n-----------------\n"); // Separador entre atendimentos
+                }
+
+                // Exibir os resultados
+                JTextArea areaTexto = new JTextArea(resultadoConsulta.toString());
+                areaTexto.setEditable(false);
+                JScrollPane scrollPane = new JScrollPane(areaTexto);
+                JOptionPane.showMessageDialog(this, scrollPane, "Consulta de Atendimentos", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        }else if (e.getSource() ==finalizaSistema){
+            this.dispose();
         }
 
 
@@ -1694,6 +1750,7 @@ public class ACMERescue extends JFrame implements ActionListener {
         }
         @Override
         public void actionPerformed(ActionEvent e) {
+
 
         }
         public class carregaArquivos extends JFrame implements ActionListener{

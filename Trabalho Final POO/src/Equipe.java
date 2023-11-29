@@ -50,6 +50,13 @@ public class Equipe implements Comparable<Equipe> {
 		return soma;
 	}
 
+	public String toString(){
+		String s;
+		s = getCodinome() + ";" + getQuantidade() + ";" + getLatitude() + ";" +
+				getLongitude() + "\n";
+		return s;
+	}
+
 	@Override
 	public int compareTo(Equipe o) {
 		return this.codinome.compareTo(o.codinome);
