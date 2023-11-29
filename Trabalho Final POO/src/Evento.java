@@ -48,6 +48,6 @@ public class Evento implements CSVConvertable, JSONConvertable{
 
 	@Override
 	public String toJSONObject() {
-		return String.format("{\"codigo\": \"%s\", \"data\": \"%s\", \"latitude\": %f, \"longitude\": %f, ",codigo,data,latitude,longitude);
+		return String.format("	{\n		\"codigo\": \"%s\",\n		\"data\": \"%s\",\n		\"latitude\": %f,\n		\"longitude\": %f,\n		",codigo,data,latitude,longitude);
 	}
 }

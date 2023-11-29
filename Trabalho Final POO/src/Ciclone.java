@@ -31,6 +31,6 @@ public class Ciclone extends Evento {
 
 	@Override
 	public String toJSONObject() {
-		return super.toJSONObject()+ String.format( "\"tipo\": \"1\", \"velocidade\": %f, \"precipitacao\": %f}",velocidade,precipitacao);
+		return super.toJSONObject()+ String.format( "\"tipo\": \"1\",\n		\"velocidade\": %f,\n		\"precipitacao\": %f\n	}",velocidade,precipitacao);
 	}
 }

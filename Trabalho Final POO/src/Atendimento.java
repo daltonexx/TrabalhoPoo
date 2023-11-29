@@ -124,7 +124,7 @@ public class Atendimento implements CSVConvertable, JSONConvertable {
 
 	@Override
 	public String toJSONObject() {
-		return String.format("{\"cod\": \"%s\", \"dataInicio\": \"%s\", \"duracao\": %d, \"status\": \"%s\", \"codigo\": \"%s\"}",
+		return String.format("	{\n		\"cod\": \"%s\",\n		\"dataInicio\": \"%s\",\n		\"duracao\": %d, \"status\": \"%s\",\n		\"codigo\": \"%s\"\n	}",
 				cod,dataInicio,duracao,status,evento.getCodigo());
 	}
 }

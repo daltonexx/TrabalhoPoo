@@ -66,6 +66,6 @@ public class Equipamento implements Comparable<Equipamento>, CSVConvertable, JSO
 
 	@Override
 	public String toJSONObject() {
-		return String.format("{\"id\": %d, \"nome\": \"%s\", \"custoDiario\": %f, \"codinome\": \"%s\", ",id,nome,custoDia,equipe.getCodinome());
+		return String.format("	{\n		\"id\": %d,\n		\"nome\": \"%s\",\n		\"custoDiario\": %f,\n		\"codinome\": \"%s\",\n		",id,nome,custoDia,equipe.getCodinome());
 	}
 }

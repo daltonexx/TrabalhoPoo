@@ -23,6 +23,6 @@ public class Terremoto extends Evento {
 
 	@Override
 	public String toJSONObject() {
-		return super.toJSONObject()+ String.format( "\"tipo\": \"2\", \"magnitude\": %f}",magnitude);
+		return super.toJSONObject()+ String.format( "\"tipo\": \"2\",\n		\"magnitude\": %f\n	}",magnitude);
 	}
 }

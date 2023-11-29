@@ -79,7 +79,7 @@ public class Equipe implements Comparable<Equipe>, CSVConvertable, JSONConvertab
 
 	@Override
 	public String toJSONObject() {
-		return String.format("{\"codinome\": \"%s\", \"quantidade\": %d, \"latitude\": %f, \"longitude\": %f}",
+		return String.format("	{\n		\"codinome\": \"%s\",\n		\"quantidade\": %d,\n		\"latitude\": %f,\n		\"longitude\": %f\n	}",
 				getCodinome(), getQuantidade(), getLatitude(), getLongitude());
 	}
 }

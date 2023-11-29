@@ -28,6 +28,6 @@ public class Escavadeira extends Equipamento implements CSVConvertable {
 
 	@Override
 	public String toJSONObject() {
-		return super.toJSONObject()+ String.format( "\"tipo\": \"3\", \"combsutivel\": \"%s\", \"carga\": %f}",combustivel.toString(),carga);
+		return super.toJSONObject()+ String.format("\"tipo\": \"3\",\n		\"combsutivel\": \"%s\",\n		\"carga\": %f\n	}",combustivel.toString(),carga);
 	}
 }

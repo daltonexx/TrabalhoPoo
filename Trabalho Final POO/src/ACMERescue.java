@@ -2004,17 +2004,25 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraEquipeJSON(String name){
             cadastra(name + "-EQUIPES.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder();
             while(linha != null){
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
                 boolean certo = true;
                 int quantidade = 0;
                 double latitude = 0.0;
                 double longitude = 0.0;
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] equipeAtributos = linha.split(":");
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] equipeAtributos = linha.toString().split(":");
                 String codinome = equipeAtributos[1].trim();
                 String strQuantidade = equipeAtributos[3].trim();
                 try{
@@ -2044,8 +2052,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         cadastros.append("CODINOME REPETIDO" + "\n");
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -2054,14 +2062,22 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraEquipamentosJSON(String name, ArrayList<Equipe> equipes){
             cadastra(name + "-EQUIPAMENTOS.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder(entrada.nextLine());
             while(linha != null){
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
                 boolean certo = true;
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] equipamentoAtributos = linha.split(":");
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] equipamentoAtributos = linha.toString().split(":");
                 int id = 0;
                 double custoDiario = 0.0;
                 int tipo = 0;
@@ -2154,8 +2170,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         }
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -2165,13 +2181,21 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraEventosJSON(String nome){
             cadastra(nome + "-EVENTOS.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder(entrada.nextLine());
             while (linha != null) {
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] atributosEvento = linha.split(":");
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] atributosEvento = linha.toString().split(":");
                 boolean certo = true;
                 double latitude = 0.0;
                 double longitude = 0.0;
@@ -2257,8 +2281,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         }
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -2267,13 +2291,21 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraAtendimentosJSON(String nome){
             cadastra(nome + "-ATENDIMENTOS.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder(entrada.nextLine());
             while (linha != null) {
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] atendimentoAtributos = linha.split(":");
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] atendimentoAtributos = linha.toString().split(":");
                 boolean certo = true;
                 int cod = 0;
                 int duracao = 0;
@@ -2307,8 +2339,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         cadastros.append("CODIGO REPETIDO" + "\n");
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -2793,17 +2825,25 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraEquipeJSON(String name){
             cadastra(name + "-EQUIPES.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder();
             while(linha != null){
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
                 boolean certo = true;
                 int quantidade = 0;
                 double latitude = 0.0;
                 double longitude = 0.0;
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] equipeAtributos = linha.split(":");
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] equipeAtributos = linha.toString().split(":");
                 String codinome = equipeAtributos[1].trim();
                 String strQuantidade = equipeAtributos[3].trim();
                 try{
@@ -2833,8 +2873,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         cadastros.append("CODINOME REPETIDO" + "\n");
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -2843,14 +2883,22 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraEquipamentosJSON(String name, ArrayList<Equipe> equipes){
             cadastra(name + "-EQUIPAMENTOS.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder(entrada.nextLine());
             while(linha != null){
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
                 boolean certo = true;
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] equipamentoAtributos = linha.split(":");
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] equipamentoAtributos = linha.toString().split(":");
                 int id = 0;
                 double custoDiario = 0.0;
                 int tipo = 0;
@@ -2943,8 +2991,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         }
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -2954,13 +3002,21 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraEventosJSON(String nome){
             cadastra(nome + "-EVENTOS.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder(entrada.nextLine());
             while (linha != null) {
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] atributosEvento = linha.split(":");
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] atributosEvento = linha.toString().split(":");
                 boolean certo = true;
                 double latitude = 0.0;
                 double longitude = 0.0;
@@ -3046,8 +3102,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         }
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -3056,13 +3112,21 @@ public class ACMERescue extends JFrame implements ActionListener {
         private void cadastraAtendimentosJSON(String nome){
             cadastra(nome + "-ATENDIMENTOS.JSON");
             entrada.nextLine();
-            String linha = entrada.nextLine();
+            StringBuilder linha = new StringBuilder(entrada.nextLine());
             while (linha != null) {
-                linha = linha.replace(",",":");
-                linha = linha.replace("\""," ");
-                linha = linha.replace("{"," ");
-                linha = linha.replace("}"," ");
-                String[] atendimentoAtributos = linha.split(":");
+                String atributo = entrada.nextLine();
+                while(!atributo.trim().equals("}") && !atributo.trim().equals("},")){
+                    atributo = atributo.replace("\n", "");
+                    if(!atributo.trim().equals("{")) {
+                        linha.append(atributo);
+                    }
+                    atributo = entrada.nextLine();
+                }
+                linha = new StringBuilder(linha.toString().replace(",", ":"));
+                linha = new StringBuilder(linha.toString().replace("\"", " "));
+                linha = new StringBuilder(linha.toString().replace("{", " "));
+                linha = new StringBuilder(linha.toString().replace("}", " "));
+                String[] atendimentoAtributos = linha.toString().split(":");
                 boolean certo = true;
                 int cod = 0;
                 int duracao = 0;
@@ -3096,8 +3160,8 @@ public class ACMERescue extends JFrame implements ActionListener {
                         cadastros.append("CODIGO REPETIDO" + "\n");
                     }
                 }
-                linha = entrada.nextLine();
-                if(linha.equals("]")){
+                linha = new StringBuilder(entrada.nextLine());
+                if(linha.toString().equals("]")){
                     linha = null;
                 }
             }
@@ -3638,7 +3702,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                 for (Object objeto : lista) {
                     JSONConvertable objetoConvert = (JSONConvertable) objeto;
                     String objetoJSON = objetoConvert.toJSONObject();
-                    writer.write("  " + objetoJSON);
+                    writer.write(objetoJSON);
                     if (i < tam - 1) {
                         writer.write(",\n");
                     }

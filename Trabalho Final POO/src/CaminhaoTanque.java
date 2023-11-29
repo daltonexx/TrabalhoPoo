@@ -28,6 +28,6 @@ public class CaminhaoTanque extends Equipamento{
 
 	@Override
 	public String toJSONObject() {
-		return super.toJSONObject()+ String.format( "\"tipo\": \"2\", \"capacidade\": %f}",capacidade);
+		return super.toJSONObject()+ String.format( "\"tipo\": \"2\",\n		 \"capacidade\": %f\n	}",capacidade);
 	}
 }

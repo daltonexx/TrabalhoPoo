@@ -28,6 +28,6 @@ public class Barco extends Equipamento{
 
 	@Override
 	public String toJSONObject() {
-		return super.toJSONObject()+ String.format( "\"tipo\": \"1\",\"capacidade\": %d}",capacidade);
+		return super.toJSONObject()+ String.format("\"tipo\": \"1\",\n		\"capacidade\": %d\n	}",capacidade);
 	}
 }
