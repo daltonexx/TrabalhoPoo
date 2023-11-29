@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Queue;
 
 
 public class ACMERescue extends JFrame implements ActionListener {
@@ -27,7 +28,7 @@ public class ACMERescue extends JFrame implements ActionListener {
     private CarregaArquivos carregaArquivos;
     private ArrayList<Evento> eventos;
     private ArrayList<Equipe> equipes;
-    private ArrayList<Atendimento> atendimentos;
+    private Queue<Atendimento> atendimentos;
     private ArrayList<Equipamento> equipamentos;
     private JButton mostrarEventos;
     private LocalDate data;
@@ -40,7 +41,7 @@ public class ACMERescue extends JFrame implements ActionListener {
         eventos = new ArrayList<>();
         equipamentos = new ArrayList<>();
         equipes = new ArrayList<>();
-        atendimentos = new ArrayList<>();
+        atendimentos = new LinkedList<>();
 
         /** leitura de arquivo
          * try {
@@ -1356,9 +1357,9 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                     if (c == null || c.isEmpty()) {
                         mensagemArea.append("Erro ao cadastrar: Código não pode ser nulo ou vazio.\n");
-                    } else if (la < 0 || la > 90) {
+                    } else if (la < -90|| la > 90) {
                         mensagemArea.append("Erro ao cadastrar: Latitude deve estar entre 0 e 90.\n");
-                    } else if (lo < 0 || lo > 180) {
+                    } else if (lo < -180 || lo > 180) {
                         mensagemArea.append("Erro ao cadastrar: Longitude deve estar entre 0 e 180.\n");
                     } else if (d <= 0 || d > 31) {
                         mensagemArea.append("Erro ao cadastrar: Dia deve estar entre 1 e 31.\n");
@@ -1419,9 +1420,9 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                     if (c == null || c.isEmpty()) {
                         mensagemArea.append("Erro ao cadastrar: Código não pode ser nulo ou vazio.\n");
-                    } else if (la < 0 || la > 90) {
+                    } else if (la < -90 || la > 90) {
                         mensagemArea.append("Erro ao cadastrar: Latitude deve estar entre 0 e 90.\n");
-                    } else if (lo < 0 || lo > 180) {
+                    } else if (lo < -180 || lo > 180) {
                         mensagemArea.append("Erro ao cadastrar: Longitude deve estar entre 0 e 180.\n");
                     } else if (d <= 0 || d > 31) {
                         mensagemArea.append("Erro ao cadastrar: Dia deve estar entre 1 e 31.\n");
@@ -1479,9 +1480,9 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                     if (c == null || c.isEmpty()) {
                         mensagemArea.append("Erro ao cadastrar: Código não pode ser nulo ou vazio.\n");
-                    } else if (la < 0 || la > 90) {
+                    } else if (la < -90 || la > 90) {
                         mensagemArea.append("Erro ao cadastrar: Latitude deve estar entre 0 e 90.\n");
-                    } else if (lo < 0 || lo > 180) {
+                    } else if (lo < -180 || lo > 180) {
                         mensagemArea.append("Erro ao cadastrar: Longitude deve estar entre 0 e 180.\n");
                     } else if (d <= 0 || d > 31) {
                         mensagemArea.append("Erro ao cadastrar: Dia deve estar entre 1 e 31.\n");
@@ -1540,14 +1541,82 @@ public class ACMERescue extends JFrame implements ActionListener {
         }else if(e.getSource() == consultaAtendimento) {
             consultaTodosAtendimentos();
 
+        }else if(e.getSource() == aAtendimento){
+            alocarAtendimentosAutomaticamente();
+        }else if(e.getSource() == mRelatorio){
+            relatorioGeral();
         }else if (e.getSource() == alteraAtendimento) {
            alteraStatusAtendimento();
         } else if (e.getSource() == finalizaSistema){
             this.dispose();
         }
+    }
 
+    private void relatorioGeral(){
+        if (eventos.isEmpty() && equipamentos.isEmpty() && equipes.isEmpty() && atendimentos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Erro: Nenhum dado cadastrado.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            StringBuilder relatorio = new StringBuilder("Relatório Geral:\n\n");
+
+            relatorio.append("Eventos:\n");
+            for (Evento evento : eventos) {
+                relatorio.append(evento.toString()).append("\n");
+            }
+            relatorio.append("\n");
+
+            relatorio.append("Equipamentos:\n");
+            for (Equipamento equipamento : equipamentos) {
+                relatorio.append(equipamento.toString()).append("\n");
+            }
+            relatorio.append("\n");
+
+            relatorio.append("Equipes:\n");
+            for (Equipe equipe : equipes) {
+                relatorio.append(equipe.toString()).append("\n");
+            }
+            relatorio.append("\n");
+
+            relatorio.append("Atendimentos:\n");
+            for (Atendimento atendimento : atendimentos) {
+                relatorio.append(atendimento.toString()).append("\n");
+            }
+
+            JTextArea relatorioTextArea = new JTextArea(relatorio.toString());
+            relatorioTextArea.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(relatorioTextArea);
+            scrollPane.setPreferredSize(new Dimension(600, 400));
+            JOptionPane.showMessageDialog(this, scrollPane, "Relatório Geral", JOptionPane.INFORMATION_MESSAGE);
+        }
 
     }
+
+
+    private void alocarAtendimentosAutomaticamente() {
+        Queue<Atendimento> atendimentosPendentes = new LinkedList<>();
+        for (Atendimento a : atendimentos){
+            if (a.getStatus().equals("PENDENTE")){
+                atendimentosPendentes.add(a);
+            }
+        }
+        if(atendimentosPendentes.isEmpty())  JOptionPane.showMessageDialog(this, "Erro: Não há atendimentos pendentes.", "Erro", JOptionPane.ERROR_MESSAGE);
+        for (Atendimento atendimento : atendimentosPendentes) {
+            boolean equipeAlocada = false;
+
+            for (Equipe equipe : equipes) {
+                if (atendimento.calcularDistancia(equipe.getLatitude(), equipe.getLongitude(), atendimento.getEvento().getLatitude(),atendimento.getEvento().getLongitude()) < 5000) {
+
+                    atendimento.setEquipe(equipe);
+                    atendimento.setStatus("EXECUTANDO");
+                    equipeAlocada = true;
+                    break;
+                }
+            }
+            if (!equipeAlocada) {
+                atendimento.setStatus("CANCELADO");
+            }
+        }
+    }
+
     private void alteraStatusAtendimento(){
         String codigoInput = JOptionPane.showInputDialog(this, "Digite o código do atendimento:");
 
@@ -1619,7 +1688,7 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                 Equipe equipe = atendimento.getEquipe();
                 if (equipe != null) {
-                    resultadoConsulta.append("Equipe Alocada:\n").append(equipe.toString());
+                    resultadoConsulta.append("\nEquipe Alocada:\n").append(equipe.toString());
 
 
                     ArrayList<Equipamento> equipamentos = equipe.getEquipamentos();
@@ -1873,7 +1942,7 @@ public class ACMERescue extends JFrame implements ActionListener {
 
                         }
                         try {
-
+                            cadastraAtendimentos(nomeArquivo.getText());
                         }catch (Exception exc){
 
                         }
@@ -1942,7 +2011,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                     if(equipeUnica(codinome)){
                         Equipe equipe = new Equipe(codinome,quantidade,latitude,longitude);
                         equipes.add(equipe);
-                        cadastros.append("Equipe: " + equipe.toString());
+                        cadastros.append("Equipe: " + equipe.toString() + "\n");
                     }
                     else{
                         cadastros.append("CODINOME REPETIDO" + "\n");
@@ -2063,11 +2132,12 @@ public class ACMERescue extends JFrame implements ActionListener {
             }
         }
 
-        private void cadastraEventos(String name){
-            cadastra(name + "-EVENTOS.CSV");
+
+        private void cadastraEventos (String nome){
+            cadastra(nome + "-EVENTOS.CSV");
             entrada.nextLine();
             String linha = entrada.nextLine();
-            while (linha != null){
+            while (linha != null) {
                 String[] atributosEvento = linha.split(";");
                 boolean certo = true;
                 double latitude = 0.0;
@@ -2080,86 +2150,83 @@ public class ACMERescue extends JFrame implements ActionListener {
                 String codigo = atributosEvento[0];
                 String data = atributosEvento[1];
                 String strLatitude = atributosEvento[2];
-                try{
+                try {
                     latitude = Double.parseDouble(strLatitude);
-                }catch (Exception e){
+                } catch (Exception e) {
                     certo = false;
                 }
                 String strLongitude = atributosEvento[3];
-                try{
+                try {
                     longitude = Double.parseDouble(strLongitude);
-                }catch (Exception e){
+                } catch (Exception e) {
                     certo = false;
                 }
                 String strTipo = atributosEvento[4];
-                if(strTipo.equals("1")){
+                if (strTipo.equals("1")) {
                     String strVelocidade = atributosEvento[5];
                     try {
                         velocidade = Double.parseDouble(strVelocidade);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         certo = false;
                         cadastros.append("ERRO NA VELOCIDADE");
                     }
                     String strPrecipitacao = atributosEvento[6];
-                    try{
+                    try {
                         precipitacao = Double.parseDouble(strPrecipitacao);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         certo = false;
                     }
-                    if(certo){
-                        if(eventoUnico(codigo)){
-                            Ciclone ciclone = new Ciclone(codigo,data,latitude,longitude,velocidade,precipitacao);
+                    if (certo) {
+                        if (eventoUnico(codigo)) {
+                            Ciclone ciclone = new Ciclone(codigo, data, latitude, longitude, velocidade, precipitacao);
                             eventos.add(ciclone);
                             cadastros.append(ciclone.toString() + "\n");
-                        }
-                        else {
+                        } else {
                             cadastros.append("CODIGO REPETIDO" + "\n");
                         }
                     }
-                }
-                else if(strTipo.equals("2")){
+                } else if (strTipo.equals("2")) {
                     String strMagnitude = atributosEvento[5];
-                    try{
+                    try {
                         magnitude = Double.parseDouble(strMagnitude);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         certo = false;
                     }
-                    if(certo){
-                        if(eventoUnico(codigo)){
-                            Terremoto terremoto = new Terremoto(codigo,data,latitude,longitude,magnitude);
+                    if (certo) {
+                        if (eventoUnico(codigo)) {
+                            Terremoto terremoto = new Terremoto(codigo, data, latitude, longitude, magnitude);
                             eventos.add(terremoto);
                             cadastros.append(terremoto.toString() + "\n");
-                        }else {
+                        } else {
                             cadastros.append("CODIGO REPETIDO" + "\n");
                         }
                     }
-                }
-                else if(strTipo.equals("3")){
+                } else if (strTipo.equals("3")) {
                     String strEstiagem = atributosEvento[5];
-                    try{
+                    try {
                         estiagem = Integer.parseInt(strEstiagem);
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         certo = false;
                     }
-                    if(certo){
-                        if(eventoUnico(codigo)){
-                            Seca seca = new Seca(codigo,data,latitude,longitude,estiagem);
+                    if (certo) {
+                        if (eventoUnico(codigo)) {
+                            Seca seca = new Seca(codigo, data, latitude, longitude, estiagem);
                             eventos.add(seca);
                             cadastros.append(seca.toString() + "\n");
-                        }else {
+                        } else {
                             cadastros.append("CODIGO REPETIDO" + "\n");
                         }
                     }
                 }
-                if(entrada.hasNextLine()){
+                if (entrada.hasNextLine()) {
                     linha = entrada.nextLine();
-                }else {
+                } else {
                     linha = null;
                 }
             }
         }
 
-        private void cadastraAtendimentos(String nome) {
+        private void cadastraAtendimentos (String nome){
             cadastra(nome + "-ATENDIMENTOS.CSV");
             entrada.nextLine();
             String linha = entrada.nextLine();
@@ -2184,57 +2251,65 @@ public class ACMERescue extends JFrame implements ActionListener {
                 }
                 String status = atendimentoAtributos[3];
                 String strEvento = atendimentoAtributos[4];
-                for(Evento ev : eventos){
-                    if(ev.getCodigo().equals(strEvento)){
+                for (Evento ev : eventos) {
+                    if (ev.getCodigo().equals(strEvento)) {
                         evento = ev;
                     }
                 }
-                if(certo){
-                    Atendimento atendimento = new Atendimento(cod, dataInicio, duracao, status, null, evento);
-                    atendimentos.add(atendimento);
-                    cadastros.append(atendimento.toString());
+                if (certo) {
+                    if(atendimentoUnico(cod)){
+                        Atendimento atendimento = new Atendimento(cod, dataInicio, duracao, status, null, evento);
+                        atendimentos.add(atendimento);
+                        cadastros.append(atendimento.toString() + "\n");
+                    }else{
+                        cadastros.append("CODIGO REPETIDO" + "\n");
+                    }
                 }
-
+                if (entrada.hasNextLine()) {
+                    linha = entrada.nextLine();
+                } else {
+                    linha = null;
+                }
             }
         }
 
-        private boolean eventoUnico(String codigo){
-            for(Evento evento : eventos){
-                if(evento.getCodigo().equals(codigo)){
+        private boolean eventoUnico (String codigo){
+            for (Evento evento : eventos) {
+                if (evento.getCodigo().equals(codigo)) {
                     return false;
                 }
             }
             return true;
         }
 
-        private boolean equipamentoUnico(int id){
-            for(Equipamento equipamento : equipamentos){
-                if(equipamento.getId() == id){
+        private boolean equipamentoUnico ( int id){
+            for (Equipamento equipamento : equipamentos) {
+                if (equipamento.getId() == id) {
                     return false;
                 }
             }
             return true;
         }
 
-        private boolean equipeUnica(String codinome){
-            for(Equipe equipe : equipes){
-                if(equipe.getCodinome().equals(codinome)){
+        private boolean equipeUnica (String codinome){
+            for (Equipe equipe : equipes) {
+                if (equipe.getCodinome().equals(codinome)) {
                     return false;
                 }
             }
             return true;
         }
 
-        private boolean atendimentoUnico(int cod){
-            for (Atendimento b : atendimentos) {
-                if (b.getCod() == cod) {
+        private boolean atendimentoUnico (int cod){
+            for (Atendimento atend : atendimentos) {
+                if (atend.getCod() == cod) {
                     return false;
                 }
             }
             return true;
         }
 
-        private void cadastra(String path){
+        private void cadastra (String path){
             try {
                 BufferedReader streamEntrada = new BufferedReader(new FileReader(path));
                 entrada = new Scanner(streamEntrada);   // Usa como entrada um arquivo
@@ -2244,6 +2319,7 @@ public class ACMERescue extends JFrame implements ActionListener {
             Locale.setDefault(Locale.ENGLISH);   // Ajusta para ponto decimal
             entrada.useLocale(Locale.ENGLISH);
         }
+
     }
 }
 

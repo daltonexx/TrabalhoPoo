@@ -44,7 +44,9 @@ public class Equipamento implements Comparable<Equipamento>{
 
 	@Override
 	public String toString() {
+
 		return "id=" + id + ", nome=" + nome + ", custoDia=" + custoDia + ", equipe=" + equipe.getCodinome();
+
 	}
 
 	@Override
