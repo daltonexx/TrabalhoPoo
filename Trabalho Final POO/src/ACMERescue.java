@@ -1529,7 +1529,6 @@ public class ACMERescue extends JFrame implements ActionListener {
         } else if (e.getSource()==cEquipe){
             iniciarAppEquipe();
             this.setVisible(false);
-
         }else if (e.getSource() == cAtendimento){
             abreCadastroAtendimento();
             this.setVisible(false);
@@ -1537,56 +1536,113 @@ public class ACMERescue extends JFrame implements ActionListener {
             abreVincularEquipamento();
             this.setVisible(false);
         }else if(e.getSource() == consultaAtendimento) {
-            if (atendimentos.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Erro: Não há atendimentos cadastrados.", "Erro", JOptionPane.ERROR_MESSAGE);
-            } else {
+            consultaTodosAtendimentos();
 
-                StringBuilder resultadoConsulta = new StringBuilder("Atendimentos Cadastrados:\n");
-
-                for (Atendimento atendimento : atendimentos) {
-
-                    resultadoConsulta.append("Código do Atendimento: ").append(atendimento.getCod()).append("\n");
-                    resultadoConsulta.append("Data de Início: ").append(atendimento.getDataInicio()).append("\n");
-                    resultadoConsulta.append("Duração em Dias: ").append(atendimento.getDuracao()).append("\n");
-                    resultadoConsulta.append("Status: ").append(atendimento.getStatus()).append("\n");
-
-                    Evento evento = atendimento.getEvento();
-                    resultadoConsulta.append("Detalhes do Evento:\n").append(atendimento.getEvento().toString());
-
-                    // Se houver uma equipe alocada, mostrar informações da equipe e equipamentos
-                    Equipe equipe = atendimento.getEquipe();
-                    if (equipe != null) {
-                        resultadoConsulta.append("Equipe Alocada:\n").append(equipe.toString());
-
-
-                        List<Equipamento> equipamentos = equipe.getEquipamentos();
-                        if (!equipamentos.isEmpty()) {
-                            resultadoConsulta.append("Equipamentos da Equipe:\n");
-                            for (Equipamento equipamento : equipamentos) {
-                                resultadoConsulta.append(" - ").append(equipamento.toString()).append("\n");
-                            }
-                        } else {
-                            resultadoConsulta.append("Esta equipe não possui equipamentos cadastrados.\n");
-                        }
-
-                        resultadoConsulta.append("Custo da Equipe: ").append(equipe.getCustoEquipe() * atendimento.getDuracao()).append("\n");
-                    } else {
-                        resultadoConsulta.append("Este atendimento não possui uma equipe alocada.\n");
-                    }
-
-                    resultadoConsulta.append("\n-----------------\n"); // Separador entre atendimentos
-                }
-
-                JTextArea areaTexto = new JTextArea(resultadoConsulta.toString());
-                areaTexto.setEditable(false);
-                JScrollPane scrollPane = new JScrollPane(areaTexto);
-                JOptionPane.showMessageDialog(this, scrollPane, "Consulta de Atendimentos", JOptionPane.INFORMATION_MESSAGE);
-            }
-
-        }else if (e.getSource() ==finalizaSistema){
+        }else if (e.getSource() == alteraAtendimento) {
+           alteraStatusAtendimento();
+        } else if (e.getSource() == finalizaSistema){
             this.dispose();
         }
 
+
+    }
+    private void alteraStatusAtendimento(){
+        String codigoInput = JOptionPane.showInputDialog(this, "Digite o código do atendimento:");
+
+        if (codigoInput == null) {
+            return;
+        }
+
+        try {
+            int codigo = Integer.parseInt(codigoInput);
+
+            Atendimento atendimentoSelecionado = null;
+            for (Atendimento atendimento : atendimentos) {
+                if (atendimento.getCod() == codigo) {
+                    atendimentoSelecionado = atendimento;
+                    break;
+                }
+            }
+
+            if (atendimentoSelecionado == null) {
+                JOptionPane.showMessageDialog(this, "Erro: Não há atendimento com o código indicado.", "Erro", JOptionPane.ERROR_MESSAGE);
+            } else {
+                String dadosAtendimento = "Dados do Atendimento:\n" + "Código do Atendimento: " + atendimentoSelecionado.getCod() + "\n" +
+                        "Data de Início: " + atendimentoSelecionado.getDataInicio() + "\n" +
+                        "Duração em Dias: " + atendimentoSelecionado.getDuracao() + "\n" +
+                        "Status: " + atendimentoSelecionado.getStatus() + "\n";
+
+                JTextArea areaTexto = new JTextArea(dadosAtendimento);
+                areaTexto.setEditable(false);
+                JScrollPane scrollPane = new JScrollPane(areaTexto);
+
+                String novaSituacao = JOptionPane.showInputDialog(this, dadosAtendimento + "\nDigite a nova situação do atendimento:");
+
+                if (novaSituacao == null) {
+                    return;
+                }
+
+                if (atendimentoSelecionado.getStatus().equals("FINALIZADO")) {
+                    JOptionPane.showMessageDialog(this, "Erro: Atendimento já está FINALIZADO e não pode ser alterado.", "Erro", JOptionPane.ERROR_MESSAGE);
+                } else if(atendimentoSelecionado.getStatus().equals(novaSituacao)) {
+                    JOptionPane.showMessageDialog(this, "Erro: Atendimento já está " + novaSituacao, "Erro", JOptionPane.ERROR_MESSAGE);
+                } else if (!novaSituacao.equals("CANCELADO") && !novaSituacao.equals("PENDENTE") && !novaSituacao.equals("EXECUTANDO") && !novaSituacao.equals("FINALIZADO")) {
+                    JOptionPane.showMessageDialog(this, "Erro: A nova situação tem que ser uma dessas: PENDENTE, EXECUTANDO, FINALIZADO, CANCELADO", "Erro", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    atendimentoSelecionado.setStatus(novaSituacao);
+                    JOptionPane.showMessageDialog(this, "Situação do atendimento atualizada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Erro: Código do atendimento deve ser um número inteiro.", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void consultaTodosAtendimentos(){
+        if (atendimentos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Erro: Não há atendimentos cadastrados.", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+
+            StringBuilder resultadoConsulta = new StringBuilder("Atendimentos Cadastrados:\n");
+
+            for (Atendimento atendimento : atendimentos) {
+
+                resultadoConsulta.append("Código do Atendimento: ").append(atendimento.getCod()).append("\n");
+                resultadoConsulta.append("Data de Início: ").append(atendimento.getDataInicio()).append("\n");
+                resultadoConsulta.append("Duração em Dias: ").append(atendimento.getDuracao()).append("\n");
+                resultadoConsulta.append("Status: ").append(atendimento.getStatus()).append("\n");
+
+                Evento evento = atendimento.getEvento();
+                resultadoConsulta.append("Detalhes do Evento:\n").append(atendimento.getEvento().toString());
+
+                Equipe equipe = atendimento.getEquipe();
+                if (equipe != null) {
+                    resultadoConsulta.append("Equipe Alocada:\n").append(equipe.toString());
+
+
+                    List<Equipamento> equipamentos = equipe.getEquipamentos();
+                    if (!equipamentos.isEmpty()) {
+                        resultadoConsulta.append("Equipamentos da Equipe:\n");
+                        for (Equipamento equipamento : equipamentos) {
+                            resultadoConsulta.append(" - ").append(equipamento.toString()).append("\n");
+                        }
+                    } else {
+                        resultadoConsulta.append("Esta equipe não possui equipamentos cadastrados.\n");
+                    }
+
+                    resultadoConsulta.append("Custo da Equipe: ").append(equipe.getCustoEquipe() * atendimento.getDuracao()).append("\n");
+                } else {
+                    resultadoConsulta.append("Este atendimento não possui uma equipe alocada.\n");
+                }
+
+                resultadoConsulta.append("\n-----------------\n"); // Separador entre atendimentos
+            }
+
+            JTextArea areaTexto = new JTextArea(resultadoConsulta.toString());
+            areaTexto.setEditable(false);
+            JScrollPane scrollPane = new JScrollPane(areaTexto);
+            JOptionPane.showMessageDialog(this, scrollPane, "Consulta de Atendimentos", JOptionPane.INFORMATION_MESSAGE);
+        }
 
     }
 

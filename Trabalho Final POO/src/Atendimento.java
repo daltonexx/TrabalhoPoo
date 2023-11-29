@@ -31,6 +31,9 @@ public class Atendimento {
 	public Evento getEvento() {
 		return evento;
 	}
+	public void setStatus(String status){
+		this.status = status;
+	}
 
 	public Atendimento(int cod, String dataInicio, int duracao, String status, Equipe equipe, Evento evento) {
 		this.cod = cod;
