@@ -1620,7 +1620,7 @@ public class ACMERescue extends JFrame implements ActionListener {
                     resultadoConsulta.append("Equipe Alocada:\n").append(equipe.toString());
 
 
-                    List<Equipamento> equipamentos = equipe.getEquipamentos();
+                    ArrayList<Equipamento> equipamentos = equipe.getEquipamentos();
                     if (!equipamentos.isEmpty()) {
                         resultadoConsulta.append("Equipamentos da Equipe:\n");
                         for (Equipamento equipamento : equipamentos) {
@@ -2020,6 +2020,5 @@ public class ACMERescue extends JFrame implements ActionListener {
             }
         }
     }
-
 }
 
