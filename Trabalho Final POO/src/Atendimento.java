@@ -32,14 +32,13 @@ public class Atendimento {
 		return evento;
 	}
 
-	public Atendimento(int cod, String dataInicio, int duracao, String status, Equipe equipe, Evento evento, Util util) {
+	public Atendimento(int cod, String dataInicio, int duracao, String status, Equipe equipe, Evento evento) {
 		this.cod = cod;
 		this.dataInicio = dataInicio;
 		this.duracao = duracao;
 		this.status = "PENDENTE";
 		this.equipe = equipe;
 		this.evento = evento;
-		this.util = util;
 	}
 
 	public void alocarEquipe(Equipe equipe) {
