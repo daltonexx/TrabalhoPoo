@@ -1790,8 +1790,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             if (equipamento.getEquipe() == null) {
                                 equipamento.setEquipe(equipe);
                                 equipe.addEquipamento(equipamento);
+                                console.append(equipamento.getNome() + " cadastrado na equipe " + equipe.getCodinome() + "\n");
                             } else {
-                                console.append("ERRO, EQUIPAMENTO JA VINCULADO A OUTRA EQUIPE!\n");
+                                console.append("ERRO, EQUIPAMENTO JA VINCULADO A ALGUMA EQUIPE!\n");
                             }
                         }
                     }
@@ -2108,6 +2109,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Barco barco = new Barco(id,nome,custoDiario,equipe,capacidadeBarco);
                             equipamentos.add(barco);
                             cadastros.append(barco.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(barco);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2125,6 +2129,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             CaminhaoTanque tanque = new CaminhaoTanque(id,nome,custoDiario,equipe,capacidadeTanque);
                             equipamentos.add(tanque);
                             cadastros.append(tanque.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(tanque);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2153,6 +2160,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
                             equipamentos.add(escavadeira);
                             cadastros.append(escavadeira.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(escavadeira);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2313,6 +2323,12 @@ public class ACMERescue extends JFrame implements ActionListener {
                     certo = false;
                 }
                 String status = atendimentoAtributos[7].trim();
+                if(!status.equals("PENDENTE")&&!status.equals("EXECUTANDO")&&!status.equals("CANCELADO")&&!status.equals("FINALIZADO")){
+                    certo = false;
+                    cadastros.append("CAMPO STATUS ERRADO");
+                } else if(!status.equals("EXECUTANDO")){
+                    status = "PENDENTE";
+                }
                 String strEvento = atendimentoAtributos[9].trim();
                 for (Evento ev : eventos) {
                     if (ev.getCodigo().equals(strEvento)) {
@@ -2477,6 +2493,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Barco barco = new Barco(id,nome,custoDiario,equipe,capacidadeBarco);
                             equipamentos.add(barco);
                             cadastros.append(barco.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(barco);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2494,6 +2513,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             CaminhaoTanque tanque = new CaminhaoTanque(id,nome,custoDiario,equipe,capacidadeTanque);
                             equipamentos.add(tanque);
                             cadastros.append(tanque.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(tanque);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2522,6 +2544,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
                             equipamentos.add(escavadeira);
                             cadastros.append(escavadeira.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(escavadeira);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2654,6 +2679,12 @@ public class ACMERescue extends JFrame implements ActionListener {
                     certo = false;
                 }
                 String status = atendimentoAtributos[3];
+                if(!status.equals("PENDENTE")&&!status.equals("EXECUTANDO")&&!status.equals("CANCELADO")&&!status.equals("FINALIZADO")){
+                    certo = false;
+                    cadastros.append("CAMPO STATUS ERRADO");
+                }else if(!status.equals("EXECUTANDO")){
+                    status = "PENDENTE";
+                }
                 String strEvento = atendimentoAtributos[4];
                 for (Evento ev : eventos) {
                     if (ev.getCodigo().equals(strEvento)) {
@@ -2929,6 +2960,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Barco barco = new Barco(id,nome,custoDiario,equipe,capacidadeBarco);
                             equipamentos.add(barco);
                             cadastros.append(barco.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(barco);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2946,6 +2980,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             CaminhaoTanque tanque = new CaminhaoTanque(id,nome,custoDiario,equipe,capacidadeTanque);
                             equipamentos.add(tanque);
                             cadastros.append(tanque.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(tanque);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -2974,6 +3011,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
                             equipamentos.add(escavadeira);
                             cadastros.append(escavadeira.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(escavadeira);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -3134,6 +3174,12 @@ public class ACMERescue extends JFrame implements ActionListener {
                     certo = false;
                 }
                 String status = atendimentoAtributos[7].trim();
+                if(!status.equals("PENDENTE")&&!status.equals("EXECUTANDO")&&!status.equals("CANCELADO")&&!status.equals("FINALIZADO")){
+                    certo = false;
+                    cadastros.append("CAMPO STATUS ERRADO");
+                }else if(!status.equals("EXECUTANDO")){
+                    status = "PENDENTE";
+                }
                 String strEvento = atendimentoAtributos[9].trim();
                 for (Evento ev : eventos) {
                     if (ev.getCodigo().equals(strEvento)) {
@@ -3255,6 +3301,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Barco barco = new Barco(id,nome,custoDiario,equipe,capacidadeBarco);
                             equipamentos.add(barco);
                             cadastros.append(barco.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(barco);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -3272,6 +3321,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             CaminhaoTanque tanque = new CaminhaoTanque(id,nome,custoDiario,equipe,capacidadeTanque);
                             equipamentos.add(tanque);
                             cadastros.append(tanque.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(tanque);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -3300,6 +3352,9 @@ public class ACMERescue extends JFrame implements ActionListener {
                             Escavadeira escavadeira = new Escavadeira(id,nome,custoDiario,equipe,combustivel,carga);
                             equipamentos.add(escavadeira);
                             cadastros.append(escavadeira.toString() + "\n");
+                            if(equipe != null){
+                                equipe.addEquipamento(escavadeira);
+                            }
                         }
                         else{
                             cadastros.append("ID REPETIDO" + "\n");
@@ -3431,6 +3486,12 @@ public class ACMERescue extends JFrame implements ActionListener {
                     certo = false;
                 }
                 String status = atendimentoAtributos[3];
+                if(!status.equals("PENDENTE")&&!status.equals("EXECUTANDO")&&!status.equals("CANCELADO")&&!status.equals("FINALIZADO")){
+                    certo = false;
+                    cadastros.append("CAMPO STATUS ERRADO");
+                }else if(!status.equals("EXECUTANDO")){
+                    status = "PENDENTE";
+                }
                 String strEvento = atendimentoAtributos[4];
                 for (Evento ev : eventos) {
                     if (ev.getCodigo().equals(strEvento)) {

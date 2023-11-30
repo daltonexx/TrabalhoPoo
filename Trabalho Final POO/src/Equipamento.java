@@ -45,7 +45,10 @@ public class Equipamento implements Comparable<Equipamento>, CSVConvertable, JSO
 	@Override
 	public String toString() {
 
-		return "id=" + id + ", nome=" + nome + ", custoDia=" + custoDia + ", equipe=" + equipe.getCodinome();
+		if(equipe != null){
+			return "id=" + id + ", nome=" + nome + ", custoDia=" + custoDia + ", equipe=" + equipe.getCodinome();
+		}
+		return "id=" + id + ", nome=" + nome + ", custoDia=" + custoDia + ", equipe=null";
 
 	}
 
@@ -56,7 +59,10 @@ public class Equipamento implements Comparable<Equipamento>, CSVConvertable, JSO
 
 	@Override
 	public String toCSV() {
-		return id+";"+nome+";"+custoDia+";"+equipe.getCodinome();
+		if(equipe != null){
+			return id+";"+nome+";"+custoDia+";"+equipe.getCodinome();
+		}
+		return id+";"+nome+";"+custoDia+";null";
 	}
 
 	@Override
@@ -66,6 +72,9 @@ public class Equipamento implements Comparable<Equipamento>, CSVConvertable, JSO
 
 	@Override
 	public String toJSONObject() {
-		return String.format("	{\n		\"id\": %d,\n		\"nome\": \"%s\",\n		\"custoDiario\": %f,\n		\"codinome\": \"%s\",\n		",id,nome,custoDia,equipe.getCodinome());
+		if(equipe != null){
+			return String.format("	{\n		\"id\": %d,\n		\"nome\": \"%s\",\n		\"custoDiario\": %f,\n		\"codinome\": \"%s\",\n		",id,nome,custoDia,equipe.getCodinome());
+		}
+		return String.format("	{\n		\"id\": %d,\n		\"nome\": \"%s\",\n		\"custoDiario\": %f,\n		\"codinome\": \"null\",\n		",id,nome,custoDia);
 	}
 }

@@ -43,7 +43,7 @@ public class Atendimento implements CSVConvertable, JSONConvertable {
 		this.cod = cod;
 		this.dataInicio = dataInicio;
 		this.duracao = duracao;
-		this.status = "PENDENTE";
+		this.status = status;
 		this.equipe = equipe;
 		this.evento = evento;
 	}
